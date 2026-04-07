@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "./useInView";
 import { TiltCard } from "./TiltCard";
 import { AllocationBar } from "./AllocationBar";
+import { CardCTA } from "./CardCTA";
 import { DUR, EASE_OUT, Y_ENTER, prefersReducedMotion } from "./motion";
 
 const HREF = "https://www.merapolicyadvisor.in/";
@@ -10,6 +11,12 @@ const allocations = [
   { label: "Equity", pct: 62, color: "#3b82f6" },
   { label: "Debt",   pct: 28, color: "#22c55e" },
   { label: "Gold",   pct: 10, color: "#c9923c" },
+];
+
+const bullets = [
+  "Covers mutual funds, insurance, and equity",
+  "No black-box AI — fully explainable logic",
+  "Built on structured, advisor-grade rules",
 ];
 
 export function MeraPolicyCard() {
@@ -35,63 +42,53 @@ export function MeraPolicyCard() {
             }}>
               Fintech
             </div>
+
             <h3 style={{
               fontSize: "2rem", fontWeight: 700, color: "#e6eaf0",
-              margin: 0, marginBottom: "0.875rem",
+              margin: 0, marginBottom: "0.5rem",
               letterSpacing: "-0.035em", lineHeight: 1.12,
             }}>
               MeraPolicyAdvisor
             </h3>
+
+            {/* Tagline */}
             <p style={{
-              fontSize: "0.9375rem", color: "#3d4d5c", fontWeight: 400,
-              margin: 0, marginBottom: "1.75rem", lineHeight: 1.65, maxWidth: 380,
+              fontSize: "1rem", color: "#8b98a5", fontWeight: 500,
+              margin: 0, marginBottom: "0.625rem",
+              letterSpacing: "-0.015em", lineHeight: 1.4,
             }}>
-              Deterministic tools for better money decisions. Covers insurance, mutual funds,
-              and equity — no black-box AI, no guesswork. Built on 847 structured decision rules.
+              Deterministic tools for better money decisions.
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              {[
-                "Covers insurance, mutual funds, and equity",
-                "No black-box AI recommendations",
-                "Built for trust with structured logic",
-              ].map((item) => (
+
+            {/* Hook */}
+            <p style={{
+              fontSize: "0.875rem", color: "#3d4d5c", fontWeight: 400,
+              margin: 0, marginBottom: "1.75rem", lineHeight: 1.65, maxWidth: 360,
+            }}>
+              Most portfolio tools show data. This tells you what to fix — and why.
+            </p>
+
+            {/* Bullets */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem", marginBottom: "2rem" }}>
+              {bullets.map((item) => (
                 <div key={item} style={{
                   display: "flex", alignItems: "flex-start",
-                  gap: "0.75rem", fontSize: "0.85rem", color: "#2e3c48",
+                  gap: "0.625rem", fontSize: "0.8125rem", color: "#2e3c48",
                 }}>
-                  <span style={{ color: "#1e3a4a", marginTop: 1 }}>—</span>
+                  <span style={{ color: "#1e3a4a", marginTop: 1, flexShrink: 0 }}>•</span>
                   {item}
                 </div>
               ))}
             </div>
 
-            {/* CTA */}
-            <div style={{ marginTop: "2rem" }}>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: "0.35rem",
-                fontSize: "0.8125rem", fontWeight: 600,
-                color: "#4a7ab5",
-                letterSpacing: "-0.01em",
-                transition: `color ${DUR.fast}s ease`,
-              }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#7ab0e8")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#4a7ab5")}
-              >
-                Explore
-                <span style={{ display: "inline-block", transition: `transform ${DUR.fast}s ease` }}
-                  onMouseEnter={e => (e.currentTarget.style.transform = "translateX(3px)")}
-                  onMouseLeave={e => (e.currentTarget.style.transform = "translateX(0)")}
-                >→</span>
-              </span>
-            </div>
+            <CardCTA label="Analyze your portfolio" color="#6a9fd8" hoverColor="#e6eaf0" />
           </div>
 
-          {/* Right */}
+          {/* Right — data viz */}
           <div style={{
             display: "flex", flexDirection: "column",
             gap: "2rem", padding: "2rem 0", justifyContent: "center",
           }}>
-            {/* Portfolio value */}
             <div>
               <div style={{
                 fontSize: "0.6875rem", color: "#2a3540", fontWeight: 500,
@@ -112,7 +109,6 @@ export function MeraPolicyCard() {
               </div>
             </div>
 
-            {/* Allocation bars */}
             <div>
               <div style={{
                 fontSize: "0.6875rem", color: "#2a3540", fontWeight: 500,
@@ -122,19 +118,11 @@ export function MeraPolicyCard() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {allocations.map((a, i) => (
-                  <AllocationBar
-                    key={a.label}
-                    label={a.label}
-                    pct={a.pct}
-                    color={a.color}
-                    index={i}
-                    inView={inView}
-                  />
+                  <AllocationBar key={a.label} label={a.label} pct={a.pct} color={a.color} index={i} inView={inView} />
                 ))}
               </div>
             </div>
 
-            {/* Rebalance suggestion */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
@@ -146,7 +134,7 @@ export function MeraPolicyCard() {
               }}>
                 Rebalance Suggestion
               </div>
-              <p style={{ fontSize: "0.85rem", color: "#2e3c48", lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: "0.8125rem", color: "#2e3c48", lineHeight: 1.6, margin: 0 }}>
                 Increase debt allocation by 4% to match target risk profile. Reduce mid-cap equity exposure.
               </p>
             </motion.div>

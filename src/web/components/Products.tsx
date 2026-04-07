@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "./useInView";
 import { MeraPolicyCard } from "./MeraPolicyCard";
 import { SuperSaverCard } from "./SuperSaverCard";
+import { PromptBoostCard } from "./PromptBoostCard";
 import { DUR, EASE_OUT, prefersReducedMotion } from "./motion";
 import { useRef, useCallback } from "react";
 
@@ -96,6 +97,7 @@ export function Products() {
           <div style={{ position: "relative", zIndex: 2 }}>
             <MeraPolicyCard />
             <SuperSaverCard />
+            <PromptBoostCard />
           </div>
         </div>
       </div>

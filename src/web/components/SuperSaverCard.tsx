@@ -1,17 +1,23 @@
 import { motion } from "framer-motion";
 import { useInView } from "./useInView";
 import { TiltCard } from "./TiltCard";
+import { CardCTA } from "./CardCTA";
 import { DUR, EASE_OUT, Y_ENTER, prefersReducedMotion } from "./motion";
 
 const HREF = "https://github.com/siddhantsrivastava7-pixel/super-saver";
 
-// Tighter delays — terminal output appears quickly, doesn't linger
 const logs = [
-  { text: "$ supersaver analyze ./project",          delay: 0.30, color: "#3d4d5c" },
-  { text: "→ Scanning 2,847 token usage patterns",   delay: 0.52, color: "#2e3c48" },
-  { text: "→ Identifying redundant context blocks",  delay: 0.70, color: "#2e3c48" },
-  { text: "→ Found 14 optimization opportunities",   delay: 0.88, color: "#4a6a8a" },
-  { text: "✓ Analysis complete",                     delay: 1.06, color: "#3d6644" },
+  { text: "$ supersaver analyze ./project",         delay: 0.30, color: "#3d4d5c" },
+  { text: "→ Scanning 2,847 token usage patterns",  delay: 0.52, color: "#2e3c48" },
+  { text: "→ Identifying redundant context blocks", delay: 0.70, color: "#2e3c48" },
+  { text: "→ Found 14 optimization opportunities",  delay: 0.88, color: "#4a6a8a" },
+  { text: "✓ Analysis complete",                    delay: 1.06, color: "#3d6644" },
+];
+
+const bullets = [
+  "Save 50–70% tokens automatically",
+  "Works with your existing workflow",
+  "Zero change to output quality",
 ];
 
 export function SuperSaverCard() {
@@ -36,63 +42,53 @@ export function SuperSaverCard() {
             }}>
               Developer Tooling
             </div>
+
             <h3 style={{
               fontSize: "2rem", fontWeight: 700, color: "#e6eaf0",
-              margin: 0, marginBottom: "0.875rem",
+              margin: 0, marginBottom: "0.5rem",
               letterSpacing: "-0.035em", lineHeight: 1.12,
             }}>
               Super Saver
             </h3>
+
+            {/* Tagline */}
             <p style={{
-              fontSize: "0.9375rem", color: "#3d4d5c", fontWeight: 400,
-              margin: 0, marginBottom: "1.75rem", lineHeight: 1.65, maxWidth: 380,
+              fontSize: "1rem", color: "#8b98a5", fontWeight: 500,
+              margin: 0, marginBottom: "0.625rem",
+              letterSpacing: "-0.015em", lineHeight: 1.4,
             }}>
-              Cut 40–70% token waste in Claude Code. One command analyzes your project
-              and eliminates redundant context — without touching your output quality.
+              Stop wasting tokens on every prompt.
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              {[
-                "Works with any Claude Code project",
-                "One-command context optimization",
-                "Average 66% token reduction observed",
-              ].map((item) => (
+
+            {/* Hook */}
+            <p style={{
+              fontSize: "0.875rem", color: "#3d4d5c", fontWeight: 400,
+              margin: 0, marginBottom: "1.75rem", lineHeight: 1.65, maxWidth: 360,
+            }}>
+              Super Saver sits inside Claude Code & Codex and optimizes prompts before they hit the model.
+            </p>
+
+            {/* Bullets */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem", marginBottom: "2rem" }}>
+              {bullets.map((item) => (
                 <div key={item} style={{
                   display: "flex", alignItems: "flex-start",
-                  gap: "0.75rem", fontSize: "0.85rem", color: "#2e3c48",
+                  gap: "0.625rem", fontSize: "0.8125rem", color: "#2e3c48",
                 }}>
-                  <span style={{ color: "#1e3a4a", marginTop: 1 }}>—</span>
+                  <span style={{ color: "#1e3a4a", marginTop: 1, flexShrink: 0 }}>•</span>
                   {item}
                 </div>
               ))}
             </div>
 
-            {/* CTA */}
-            <div style={{ marginTop: "2rem" }}>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: "0.35rem",
-                fontSize: "0.8125rem", fontWeight: 600,
-                color: "#3a7a52",
-                letterSpacing: "-0.01em",
-                transition: `color ${DUR.fast}s ease`,
-              }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#5ab87a")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#3a7a52")}
-              >
-                Explore
-                <span style={{ display: "inline-block", transition: `transform ${DUR.fast}s ease` }}
-                  onMouseEnter={e => (e.currentTarget.style.transform = "translateX(3px)")}
-                  onMouseLeave={e => (e.currentTarget.style.transform = "translateX(0)")}
-                >→</span>
-              </span>
-            </div>
+            <CardCTA label="Save tokens now" color="#4a9e6a" hoverColor="#e6eaf0" />
           </div>
 
-          {/* Right */}
+          {/* Right — terminal */}
           <div style={{
             display: "flex", flexDirection: "column",
             gap: "2rem", padding: "2rem 0", justifyContent: "center",
           }}>
-            {/* Terminal logs */}
             <div>
               <div style={{
                 fontSize: "0.6875rem", color: "#2a3540", fontWeight: 500,
@@ -109,11 +105,7 @@ export function SuperSaverCard() {
                     key={i}
                     initial={{ opacity: 0 }}
                     animate={inView ? { opacity: 1 } : {}}
-                    transition={{
-                      duration: DUR.std,
-                      ease: "easeOut",
-                      delay: noMotion ? 0 : log.delay,
-                    }}
+                    transition={{ duration: DUR.std, ease: "easeOut", delay: noMotion ? 0 : log.delay }}
                     style={{ fontSize: "0.78rem", color: log.color, lineHeight: 1.6 }}
                   >
                     {log.text}
@@ -122,7 +114,6 @@ export function SuperSaverCard() {
               </div>
             </div>
 
-            {/* Token bars */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
@@ -142,34 +133,20 @@ export function SuperSaverCard() {
                   <div key={row.label}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                       <span style={{ fontSize: "0.8rem", color: "#3d4d5c" }}>{row.label}</span>
-                      <span style={{
-                        fontSize: "0.8rem", color: "#6a7a88",
-                        fontWeight: 500, fontFamily: "monospace",
-                      }}>{row.count}</span>
+                      <span style={{ fontSize: "0.8rem", color: "#6a7a88", fontWeight: 500, fontFamily: "monospace" }}>{row.count}</span>
                     </div>
-                    <div style={{
-                      height: 3, background: "rgba(255,255,255,0.04)",
-                      borderRadius: 100, overflow: "hidden",
-                    }}>
+                    <div style={{ height: 3, background: "rgba(255,255,255,0.04)", borderRadius: 100, overflow: "hidden" }}>
                       <motion.div
                         initial={{ width: 0 }}
                         animate={inView ? { width: `${row.pct}%` } : {}}
-                        transition={{
-                          duration: 0.9,
-                          delay: noMotion ? 0 : 1.4 + i * 0.15,
-                          ease: EASE_OUT,
-                        }}
+                        transition={{ duration: 0.9, delay: noMotion ? 0 : 1.4 + i * 0.15, ease: EASE_OUT }}
                         style={{ height: "100%", background: row.color, borderRadius: 100 }}
                       />
                     </div>
                   </div>
                 ))}
               </div>
-              <div style={{
-                marginTop: "1.25rem",
-                fontSize: "0.8rem", color: "#3d6644",
-                fontWeight: 600, letterSpacing: "-0.01em",
-              }}>
+              <div style={{ marginTop: "1.25rem", fontSize: "0.8rem", color: "#3d6644", fontWeight: 600, letterSpacing: "-0.01em" }}>
                 66% reduction
               </div>
             </motion.div>
