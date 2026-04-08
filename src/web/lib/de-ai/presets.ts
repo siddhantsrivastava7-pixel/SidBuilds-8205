@@ -309,6 +309,96 @@ export const REALITY_ANCHORS: string[] = [
   "saw this pattern play out again",
 ];
 
+// ── Hard-banned phrases (Rule 6) ─────────────────────────────
+// These must never appear in output. Engine strips them in a dedicated pass.
+export const HARD_BANNED_PHRASES: string[] = [
+  "in conclusion",
+  "to summarize",
+  "in summary",
+  "to conclude",
+  "it is important to",
+  "it's important to",
+  "it is important that",
+  "it's important that",
+  "widely considered",
+  "widely regarded",
+  "plays a critical role",
+  "plays an important role",
+  "plays a key role",
+  "plays a vital role",
+  "it goes without saying",
+  "needless to say",
+  "it should be noted",
+  "it is worth noting that",
+  "it's worth noting that",
+  "it is safe to say",
+  "it's safe to say",
+  "at the end of the day",
+  "as we all know",
+  "first and foremost",
+  "last but not least",
+  "in today's",
+  "in the modern era",
+  "in the digital age",
+  "in this day and age",
+  "it is clear that",
+  "it's clear that",
+  "one can argue",
+  "it can be argued",
+  "there is no doubt",
+  "without a doubt",
+  "it is undeniable",
+  "all in all",
+  "to sum up",
+  "in a nutshell",
+];
+
+// ── Conversational Injectors (Rule 8) ────────────────────────
+// 1–2 of these get woven into the output to make it feel spoken.
+// Keyed by emotion for tone consistency.
+export const CONVERSATIONAL_INJECTORS: Record<EmotionMode, string[]> = {
+  frustration: [
+    "honestly,",
+    "the thing is,",
+    "look —",
+    "and here's what gets me:",
+    "no, seriously —",
+    "the real issue is",
+  ],
+  disbelief: [
+    "and somehow",
+    "wait —",
+    "the thing is,",
+    "honestly,",
+    "which is wild because",
+    "i still can't believe",
+  ],
+  curiosity: [
+    "the thing is,",
+    "weirdly enough,",
+    "here's what I keep coming back to:",
+    "honestly,",
+    "which makes you wonder —",
+    "what's strange is",
+  ],
+  confidence: [
+    "look —",
+    "here's the thing:",
+    "honestly,",
+    "the answer is straightforward:",
+    "and I mean this —",
+    "the thing is,",
+  ],
+  annoyance: [
+    "honestly,",
+    "the thing is,",
+    "and yet —",
+    "come on —",
+    "this is the part that gets me:",
+    "no —",
+  ],
+};
+
 // Sub-set of teaching markers used for the "over-explanation" issue check
 export const EXPLANATORY_PHRASES: string[] = [
   "what this means is",

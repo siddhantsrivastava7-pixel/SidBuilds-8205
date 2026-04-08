@@ -40,7 +40,13 @@ import {
 import { scoreAiFingerprint } from "./scoreAiFingerprint";
 import { generateThoughtAnchor } from "./thoughtEngine";
 import { applyHumanRhythm } from "./rhythmEngine";
-import { buildAnchoredDraft, applyImperfectSentences } from "./humanLayers";
+import {
+  buildAnchoredDraft,
+  applyImperfectSentences,
+  stripHardBanned,
+  injectConversationalPhrases,
+  breakSentenceStructure,
+} from "./humanLayers";
 
 // ── Helpers ───────────────────────────────────────────────────
 
@@ -419,17 +425,27 @@ export function rewriteHuman(
     // Step 2: Build anchored draft — reconstruct text from anchor + stance
     working = buildAnchoredDraft(text, anchor, options, changes);
 
-    // Step 3: Strip teaching markers BEFORE imperfect transforms so patterns
-    // like "it is important to note that" don't get half-converted
+    // Step 3: Strip teaching markers + hard-banned phrases BEFORE sentence
+    // transforms so patterns don't get half-converted by later passes
+    working = stripHardBanned(working, changes);
     if (options.intensity === "medium" || options.intensity === "aggressive") {
       working = removeTeachingTone(working, options, changes);
     }
 
     // Step 4: Apply imperfect sentence transforms (human speaking patterns)
     working = applyImperfectSentences(working, options.emotion, changes);
+
+    // Step 5: Inject 1–2 conversational phrases so output sounds spoken
+    working = injectConversationalPhrases(working, options.emotion, changes);
+
+    // Step 6: Break remaining over-preserved sentence structure
+    if (options.intensity === "medium" || options.intensity === "aggressive") {
+      working = breakSentenceStructure(working, changes);
+    }
   } else {
-    // V1 fallback: just strip generic opener
+    // V1 fallback: strip generic opener + hard-banned phrases
     working = stripGenericOpener(working, options, changes);
+    working = stripHardBanned(working, changes);
   }
 
   // ── RHYTHM PHASE ──────────────────────────────────────────

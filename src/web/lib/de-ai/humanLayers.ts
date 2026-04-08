@@ -15,7 +15,13 @@ import {
   fixCapitalization,
   escapeRegex,
 } from "./utils";
-import { GENERIC_OPENERS, CONCLUSION_PHRASES, TEACHING_TONE_MARKERS } from "./presets";
+import {
+  GENERIC_OPENERS,
+  CONCLUSION_PHRASES,
+  TEACHING_TONE_MARKERS,
+  HARD_BANNED_PHRASES,
+  CONVERSATIONAL_INJECTORS,
+} from "./presets";
 
 // ── Boundary Stripping ────────────────────────────────────────
 
@@ -221,4 +227,149 @@ export function applyImperfectSentences(
   result = fixSpaces(result);
   result = fixCapitalization(result);
   return result;
+}
+
+// ── Hard-Ban Stripper (Rule 6) ────────────────────────────────
+// Removes phrases that must NEVER appear in output, regardless of source.
+
+export function stripHardBanned(
+  text: string,
+  changes: string[]
+): string {
+  let result = text;
+
+  // Sort longest first to avoid partial-match conflicts
+  const sorted = [...HARD_BANNED_PHRASES].sort((a, b) => b.length - a.length);
+
+  for (const phrase of sorted) {
+    const escaped = escapeRegex(phrase);
+    // Match phrase optionally followed by comma, colon, or trailing space
+    const re = new RegExp(`\\b${escaped}\\b[,:]?\\s*`, "gi");
+    const matches = result.match(re);
+    if (!matches || matches.length === 0) continue;
+    result = result.replace(re, "");
+    changes.push(`Stripped hard-banned phrase: "${phrase}"`);
+  }
+
+  result = fixSpaces(result);
+  result = fixCapitalization(result);
+  return result;
+}
+
+// ── Conversational Injector (Rule 8) ─────────────────────────
+// Weaves 1–2 conversational phrases into the text so it sounds spoken.
+// Picks injection points deterministically (no randomness).
+
+export function injectConversationalPhrases(
+  text: string,
+  emotion: EmotionMode,
+  changes: string[]
+): string {
+  const sentences = splitSentences(text);
+  if (sentences.length < 2) return text;
+
+  const injectors = CONVERSATIONAL_INJECTORS[emotion];
+  const seed = text.length;
+
+  // Never inject at position 0 (the anchor is already grounded)
+  // Inject at position 1 (after the opener) and near the middle
+
+  // Injection 1: after sentence 1 — prepend injector to sentence 2
+  const injector1 = injectors[seed % injectors.length];
+
+  // Lowercase start of sentence 2 to blend naturally
+  const s2 = sentences[1];
+  const s2Lower = s2.charAt(0).toLowerCase() + s2.slice(1);
+  sentences[1] = `${capitalize(injector1)} ${s2Lower}`;
+
+  // Injection 2: at mid-point — only if text is long enough and injector is different
+  if (sentences.length >= 5) {
+    const injector2 = injectors[(seed + 2) % injectors.length];
+    if (injector2 !== injector1) {
+      const mid = Math.floor(sentences.length / 2);
+      const sm = sentences[mid];
+      const smLower = sm.charAt(0).toLowerCase() + sm.slice(1);
+      sentences[mid] = `${capitalize(injector2)} ${smLower}`;
+      changes.push(`Injected conversational phrases: "${injector1.trim()}" + "${injector2.trim()}"`);
+    } else {
+      changes.push(`Injected conversational phrase: "${injector1.trim()}"`);
+    }
+  } else {
+    changes.push(`Injected conversational phrase: "${injector1.trim()}"`);
+  }
+
+  return fixSpaces(fixCapitalization(sentences.join(" ")));
+}
+
+// ── Sentence Structure Breaker (Rules 1 + 7) ─────────────────
+// Aggressively destroys preserved original sentence structure.
+// After reconstruction, content sentences still tend to be too similar to source.
+// This pass: splits overly long sentences, drops redundant restatements.
+
+export function breakSentenceStructure(
+  text: string,
+  changes: string[]
+): string {
+  let sentences = splitSentences(text);
+  if (sentences.length < 2) return text;
+
+  const result: string[] = [];
+  let structureChanged = false;
+
+  for (let i = 0; i < sentences.length; i++) {
+    const s = sentences[i];
+    const wc = wordCount(s);
+
+    // Long sentence (>22 words): try to split at natural break points
+    if (wc > 22) {
+      // Priority break points: " — ", " which ", " and this ", " but this "
+      const breakPatterns = [
+        /\s+—\s+/,
+        /,\s+and\s+this\s+/i,
+        /,\s+but\s+this\s+/i,
+        /,\s+which\s+means\s+/i,
+        /\s+and\s+(?=\w)/,
+      ];
+
+      let split = false;
+      for (const pat of breakPatterns) {
+        const match = s.match(pat);
+        if (match && match.index !== undefined) {
+          const breakPos = match.index;
+          const part1 = s.slice(0, breakPos).trim().replace(/,\s*$/, "") + ".";
+          const part2 = capitalize(s.slice(breakPos + match[0].length).trim());
+          if (wordCount(part1) >= 5 && wordCount(part2) >= 4) {
+            result.push(part1, part2);
+            split = true;
+            structureChanged = true;
+            break;
+          }
+        }
+      }
+      if (!split) result.push(s);
+    }
+    // Two consecutive short sentences (<= 6 words each): merge them conversationally
+    else if (
+      wc <= 6 &&
+      i + 1 < sentences.length &&
+      wordCount(sentences[i + 1]) <= 6
+    ) {
+      const combined =
+        s.replace(/[.!?]+$/, "") +
+        " — " +
+        sentences[i + 1].charAt(0).toLowerCase() +
+        sentences[i + 1].slice(1);
+      result.push(combined);
+      i++; // Skip next sentence — we consumed it
+      structureChanged = true;
+    } else {
+      result.push(s);
+    }
+  }
+
+  if (structureChanged) {
+    changes.push("Broke up sentence structure for natural variation");
+  }
+
+  return fixSpaces(fixCapitalization(result.join(" ")));
 }
