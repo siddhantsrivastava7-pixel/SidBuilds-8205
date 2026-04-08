@@ -39,8 +39,20 @@ function humanizeChanges(engineChanges: string[]): string[] {
 
   for (const c of engineChanges) {
     const l = c.toLowerCase();
-    if (l.includes("thought anchor") || l.includes("anchored draft"))
+    // V3 idea pipeline labels
+    if (l.includes("extracted") && l.includes("idea"))
+      add("extracted the core ideas");
+    else if (l.includes("reduced to primary"))
+      add("cut filler content, kept only what matters");
+    else if (l.includes("rebuilt text from ideas"))
+      add("rewrote from scratch — original structure gone");
+    else if (l.includes("stance enforced"))
+      add("replaced hedging with a real opinion");
+    else if (l.includes("opinion booster"))
+      add("sharpened the closing");
+    else if (l.includes("domain stance") || l.includes("thought anchor") || l.includes("anchored draft"))
       add("reframed from a human perspective");
+    // V1/V2 labels
     else if (l.includes("generic opener"))
       add("killed the AI opener");
     else if (l.includes("transition"))
@@ -55,14 +67,14 @@ function humanizeChanges(engineChanges: string[]): string[] {
       add("cut filler words");
     else if (l.includes("rhythm") || l.includes("fragment") || l.includes("em-dash") || l.includes("run-on"))
       add("varied sentence rhythm");
+    else if (l.includes("conversational"))
+      add("added a grounded perspective");
     else if (l.includes("emotional opener") || l.includes("emotion"))
       add("locked emotional tone");
     else if (l.includes("split long") || l.includes("merged"))
       add("restructured sentence flow");
     else if (l.includes("imperfect") || l.includes("converted") || l.includes("replaced '") || l.includes("simplified"))
       add("replaced stiff phrasing with how people actually talk");
-    else if (l.includes("core thought") || l.includes("injected"))
-      add("added a grounded perspective");
     else if (l.includes("passive"))
       add("removed passive constructions");
     else if (l.includes("paragraph"))

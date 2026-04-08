@@ -412,6 +412,97 @@ export const EXPLANATORY_PHRASES: string[] = [
   "this indicates that",
 ];
 
+// ── V3: Rebuild Template Banks ───────────────────────────────
+
+// Opening anchor lines — short grounded statements (no "I saw this" repeat, varied)
+export const REBUILD_ANCHORS: string[] = [
+  "Saw this pattern play out again.",
+  "Keep running into this exact thing.",
+  "This came up again this week.",
+  "Had this conversation recently.",
+  "People are still getting this wrong.",
+  "Watch this happen all the time.",
+  "This is one of those things nobody wants to admit.",
+  "The same mistake, over and over.",
+  "Spent some time thinking about this.",
+  "This keeps proving itself out.",
+];
+
+// Templates for wrapping a primary idea into an opinionated stance
+// {idea} = the primary idea text
+export const PRIMARY_IDEA_TEMPLATES: string[] = [
+  "The real issue is {idea}.",
+  "Nobody talks about {idea} enough.",
+  "What most people miss is {idea}.",
+  "The thing that actually matters here is {idea}.",
+  "Strip away the noise and it's just {idea}.",
+  "Here's what it actually comes down to: {idea}.",
+  "The part people skip over is {idea}.",
+  "Every time, it comes back to {idea}.",
+];
+
+// Blunt transition lines before supporting ideas
+export const BLUNT_TRANSITIONS: string[] = [
+  "And it shows.",
+  "You can see it everywhere.",
+  "The data backs this up.",
+  "It's not complicated.",
+  "Look at what actually happens.",
+  "This is where it gets interesting.",
+  "Here's the part that matters.",
+  "The pattern is clear.",
+];
+
+// Ending lines — short punchy close (no "in conclusion" tone)
+export const REBUILD_ENDINGS: string[] = [
+  "That's the whole game.",
+  "Everything else is noise.",
+  "Not complicated. Just ignored.",
+  "Fix that one thing.",
+  "Most people never get this far.",
+  "The answer was always there.",
+  "Stop overcomplicating it.",
+  "That's it. That's the whole thing.",
+];
+
+// Idea type classification signals
+// Words that strongly indicate each idea type
+export const IDEA_TYPE_SIGNALS: Record<string, string[]> = {
+  problem: [
+    "problem", "issue", "challenge", "struggle", "failure", "fail", "broken",
+    "wrong", "mistake", "error", "crisis", "risk", "danger", "threat", "flaw",
+    "weakness", "gap", "lacking", "missing", "difficult", "hard",
+  ],
+  cause: [
+    "because", "since", "due to", "caused by", "leads to", "results from",
+    "stems from", "driven by", "reason", "why", "root", "origin", "source",
+    "trigger", "behind",
+  ],
+  effect: [
+    "therefore", "so", "thus", "as a result", "consequently", "which means",
+    "outcome", "impact", "effect", "creates", "produces", "results in",
+    "leads to", "generates", "causes",
+  ],
+  advice: [
+    "should", "must", "need to", "have to", "try", "recommend", "suggest",
+    "start", "stop", "avoid", "consider", "focus", "invest", "build", "do",
+    "make sure", "remember", "keep", "always", "never",
+  ],
+  observation: [
+    "often", "usually", "typically", "tend to", "notice", "see", "find",
+    "pattern", "most", "many", "common", "regular", "always", "never",
+    "consistently", "keep", "still",
+  ],
+};
+
+// Words that make an idea generic/low-value (used in priority penalization)
+export const GENERIC_IDEA_SIGNALS: string[] = [
+  "important", "crucial", "essential", "key", "critical", "significant",
+  "fundamental", "vital", "necessary", "relevant", "various", "different",
+  "multiple", "several", "many", "some", "certain", "particular", "specific",
+  "general", "overall", "various aspects", "wide range", "number of",
+];
+
 // ── Corporate Buzzwords ──────────────────────────────────────
 // These are jargon words that AI uses to sound professional
 export const CORPORATE_BUZZWORDS: string[] = [

@@ -87,7 +87,7 @@ export interface HumanRewriteConfig {
   mode: RewriteMode;
   emotion: EmotionMode;
   intensity: RewriteIntensity;
-  useThoughtAnchor?: boolean;   // default true — enables V2 reconstruction pipeline
+  useThoughtAnchor?: boolean;   // default true — enables V3 rebuild pipeline
   useRhythmEngine?: boolean;    // default true — applies rhythm variation
   useStanceAmplifier?: boolean; // default true — injects opinionated reframe
 }
@@ -98,7 +98,46 @@ export interface RewriteResult {
   beforeScore: number;
   afterScore: number;
   changes: string[];          // human-readable log of each transformation applied
-  thoughtAnchor?: ThoughtAnchor; // V2: present when useThoughtAnchor is true
+  thoughtAnchor?: ThoughtAnchor; // present when useThoughtAnchor is true
+}
+
+// ── V3: Idea Extraction + Rebuild types ──────────────────────
+
+// The semantic type of an extracted idea unit
+export type IdeaType =
+  | "claim"       // an assertion: "X is Y"
+  | "problem"     // something is wrong or broken
+  | "cause"       // explains why something happens
+  | "effect"      // what happens as a result
+  | "advice"      // a recommendation or instruction
+  | "observation"; // a noticed pattern or fact
+
+// A single idea extracted from one source sentence
+export interface ExtractedIdea {
+  id: string;             // e.g. "idea_0", "idea_1"
+  text: string;           // the stripped-down idea (short phrase, no filler)
+  sourceSentence: string; // the full original sentence it came from
+  type: IdeaType;
+  priority: number;       // 1 = highest, higher numbers = lower priority
+  keywords: string[];     // 2–4 content words extracted from the idea
+}
+
+// The result of reducing many ideas down to a working set
+export interface ReducedIdeaSet {
+  primary: ExtractedIdea;           // the single most important idea
+  supporting: ExtractedIdea[];      // 2–4 ideas that back up the primary
+  dropped: ExtractedIdea[];         // ideas that were cut
+}
+
+// The full plan passed to the rebuild function
+export interface RebuildPlan {
+  anchor: string;                   // grounded opener ("Saw this pattern again.")
+  stance: string;                   // opinionated reframe of the primary idea
+  primaryIdea: ExtractedIdea;
+  supportingIdeas: ExtractedIdea[];
+  emotion: EmotionMode;
+  mode: RewriteMode;
+  intensity: RewriteIntensity;
 }
 
 // A single entry in the score breakdown

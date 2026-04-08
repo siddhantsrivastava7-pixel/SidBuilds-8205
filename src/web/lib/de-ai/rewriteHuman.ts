@@ -1,8 +1,8 @@
 // ============================================================
-// De-AI Engine V2 — Rewrite Engine
-// Updated pipeline: think first, then rewrite.
+// De-AI Engine V3 — Rewrite Engine
 // V1: strips AI patterns
 // V2: reconstructs how a human would actually say this
+// V3: extracts ideas, reduces, rebuilds from scratch
 // ============================================================
 
 import type {
@@ -12,6 +12,7 @@ import type {
   EmotionMode,
   RhythmProfile,
   ThoughtAnchor,
+  RebuildPlan,
 } from "./types";
 import {
   GROUNDED_OPENERS,
@@ -41,12 +42,13 @@ import { scoreAiFingerprint } from "./scoreAiFingerprint";
 import { generateThoughtAnchor } from "./thoughtEngine";
 import { applyHumanRhythm } from "./rhythmEngine";
 import {
-  buildAnchoredDraft,
-  applyImperfectSentences,
   stripHardBanned,
   injectConversationalPhrases,
-  breakSentenceStructure,
 } from "./humanLayers";
+import { extractIdeas } from "./ideaExtractor";
+import { reduceIdeas } from "./ideaReducer";
+import { rebuildFromIdeas } from "./rebuildFromIdeas";
+import { enforceStance, injectOpinionBooster } from "./stanceEnforcer";
 
 // ── Helpers ───────────────────────────────────────────────────
 
@@ -75,7 +77,7 @@ function emotionalWordCount(text: string): number {
   return count;
 }
 
-// ── V1 Cleaning Passes (preserved, used in both V1 and V2) ───
+// ── V1 Cleaning Passes ────────────────────────────────────────
 
 function stripGenericOpener(
   text: string,
@@ -400,7 +402,7 @@ function breakParagraphSymmetry(
   return newParagraphs.join("\n\n");
 }
 
-// ── Main Export — V2 Pipeline ─────────────────────────────────
+// ── Main Export — V3 Pipeline ─────────────────────────────────
 
 export function rewriteHuman(
   text: string,
@@ -411,37 +413,57 @@ export function rewriteHuman(
   const changes: string[] = [];
   let anchor: ThoughtAnchor | undefined;
 
-  const useV2 = options.useThoughtAnchor !== false;
+  const useV3 = options.useThoughtAnchor !== false;
 
-  // ── V2 PHASE: Think first, then reconstruct ───────────────
+  // ── V3 PHASE: Extract ideas → reduce → rebuild ────────────
 
-  if (useV2) {
-    // Step 1: Generate thought anchor — extract domain, stance, coreThought
+  if (useV3) {
+    // Step 1: Generate thought anchor for domain/stance context
     anchor = generateThoughtAnchor(text, options);
     changes.push(
-      `[V2] Generated thought anchor — domain stance: "${truncate(anchor.stance, 60)}"`
+      `[V3] Extracted domain stance: "${truncate(anchor.stance, 60)}"`
     );
 
-    // Step 2: Build anchored draft — reconstruct text from anchor + stance
-    working = buildAnchoredDraft(text, anchor, options, changes);
+    // Step 2: Extract discrete ideas from the source text
+    const ideas = extractIdeas(text);
+    changes.push(`[V3] Extracted ${ideas.length} idea(s) from source`);
 
-    // Step 3: Strip teaching markers + hard-banned phrases BEFORE sentence
-    // transforms so patterns don't get half-converted by later passes
-    working = stripHardBanned(working, changes);
-    if (options.intensity === "medium" || options.intensity === "aggressive") {
-      working = removeTeachingTone(working, options, changes);
+    // Step 3: Reduce to primary + supporting set
+    const supportingCount = options.intensity === "light" ? 2
+      : options.intensity === "medium" ? 3
+      : 4;
+    const reduced = reduceIdeas(ideas, supportingCount);
+    changes.push(
+      `[V3] Reduced to primary idea + ${reduced.supporting.length} supporting (dropped ${reduced.dropped.length})`
+    );
+
+    // Step 4: Build RebuildPlan and generate fresh text
+    const plan: RebuildPlan = {
+      anchor: anchor.anchor,
+      stance: anchor.stance,
+      primaryIdea: reduced.primary,
+      supportingIdeas: reduced.supporting,
+      emotion: options.emotion,
+      mode: options.mode,
+      intensity: options.intensity,
+    };
+    working = rebuildFromIdeas(plan);
+    changes.push("[V3] Rebuilt text from ideas (original structure discarded)");
+
+    // Step 5: Enforce opinionated stance — remove hedging and advisory neutrality
+    working = enforceStance(working, options.emotion, changes);
+
+    // Step 6: Inject opinion booster if output ends flat
+    if (options.intensity !== "light") {
+      working = injectOpinionBooster(working, options.emotion, changes);
     }
 
-    // Step 4: Apply imperfect sentence transforms (human speaking patterns)
-    working = applyImperfectSentences(working, options.emotion, changes);
+    // Step 7: Hard-ban cleanup (defensive — should be rare after rebuild)
+    working = stripHardBanned(working, changes);
 
-    // Step 5: Inject 1–2 conversational phrases so output sounds spoken
+    // Step 8: Inject conversational phrases so it sounds spoken
     working = injectConversationalPhrases(working, options.emotion, changes);
 
-    // Step 6: Break remaining over-preserved sentence structure
-    if (options.intensity === "medium" || options.intensity === "aggressive") {
-      working = breakSentenceStructure(working, changes);
-    }
   } else {
     // V1 fallback: strip generic opener + hard-banned phrases
     working = stripGenericOpener(working, options, changes);
@@ -463,26 +485,30 @@ export function rewriteHuman(
     working = applyHumanRhythm(working, rhythmProfile, options.emotion, changes);
   }
 
-  // ── CLEANING PHASE (shared with V1) ──────────────────────
+  // ── CLEANING PHASE ────────────────────────────────────────
+  // V3: reduced — rebuild already strips structure, teaching tone, and hedging.
+  // Only run synonym substitution and transition reduction as light cleanup.
 
   // Always reduce transitions
   working = reduceTransitions(working, options, changes);
 
   if (options.intensity === "medium" || options.intensity === "aggressive") {
-    working = removeTeachingTone(working, options, changes);
-    working = breakSentenceUniformity(working, options, changes);
-    working = compressFillers(working, options, changes);
-    working = substituteSynonyms(working, options, changes);
-    working = stripHedgePhrases(working, options, changes);
-
-    // Only add emotional opener if no thought anchor was used (V2 anchor already grounds tone)
-    if (!useV2) {
+    // Teaching tone and fillers: run in V1 fallback only (V3 rebuild doesn't need them)
+    if (!useV3) {
+      working = removeTeachingTone(working, options, changes);
+      working = compressFillers(working, options, changes);
       working = addEmotionalOpener(working, options, changes);
     }
+
+    working = substituteSynonyms(working, options, changes);
+    working = stripHedgePhrases(working, options, changes);
+    working = breakSentenceUniformity(working, options, changes);
   }
 
   if (options.intensity === "aggressive") {
-    working = breakParagraphSymmetry(working, options, changes);
+    if (!useV3) {
+      working = breakParagraphSymmetry(working, options, changes);
+    }
   }
 
   const afterScore = scoreAiFingerprint(working).score;
