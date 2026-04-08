@@ -46,8 +46,9 @@ function MiniNav() {
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <a href="/" style={{ textDecoration: "none" }}>
           <span style={{ fontSize: "0.9rem", fontWeight: 600, letterSpacing: "-0.03em" }}>
-            <span style={{ color: "#ffffff" }}>Sid</span>
-            <span style={{ color: "rgba(255,255,255,0.45)" }}>Builds</span>
+            <span style={{ color: "#c9923c" }}>OffScript</span>
+            <span style={{ color: "rgba(255,255,255,0.25)" }}> by </span>
+            <span style={{ color: "rgba(255,255,255,0.45)" }}>SidBuilds</span>
           </span>
         </a>
         <a href="#tool" style={{
@@ -102,10 +103,10 @@ function Hero() {
 
         {/* Subtext */}
         <motion.p {...r(0.18)} style={{ fontSize: "1.0625rem", color: "#4a5562", lineHeight: 1.7, maxWidth: 440, margin: 0, marginBottom: "0.5rem" }}>
-          OffScript removes the patterns people subconsciously ignore — generic openers, essay transitions, teaching tone, perfect symmetry.
+          People don't read AI content. They skip it.
         </motion.p>
-        <motion.p {...r(0.22)} style={{ fontSize: "0.875rem", color: "#2e3c48", margin: 0, marginBottom: "2rem" }}>
-          Same idea. Different feel.
+        <motion.p {...r(0.24)} style={{ fontSize: "0.75rem", color: "#2e3c48", margin: "0 0 1.25rem", lineHeight: 1.5 }}>
+          Paste your content below and see the difference instantly.
         </motion.p>
 
         {/* CTAs */}
@@ -121,7 +122,7 @@ function Hero() {
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 20px rgba(201,146,60,0.35)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 12px rgba(201,146,60,0.25)"; }}
           >
-            Try it now →
+            Fix my text →
           </a>
           <a href="#how-it-works" style={{
             display: "inline-flex", alignItems: "center", padding: "0.6875rem 1.375rem",
@@ -146,7 +147,7 @@ function ToolSection() {
       <Reveal>
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", marginBottom: "1.75rem", flexWrap: "wrap" }}>
           <Label>De-AI Engine</Label>
-          <span style={{ fontSize: "0.75rem", color: "#1e2a32" }}>Paste content · choose settings · get the human version</span>
+          <span style={{ fontSize: "0.75rem", color: "#1e2a32" }}>Paste AI content. Get something that actually sounds like you.</span>
         </div>
       </Reveal>
 
@@ -159,6 +160,9 @@ function ToolSection() {
       }}>
         <DeAiTool />
       </div>
+      <p style={{ fontSize: "0.8125rem", color: "#2e3c48", margin: "1.25rem 0 0", letterSpacing: "-0.01em" }}>
+        Same idea. Different feel.
+      </p>
     </Section>
   );
 }

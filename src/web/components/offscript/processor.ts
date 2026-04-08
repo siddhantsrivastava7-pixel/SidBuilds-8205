@@ -47,6 +47,7 @@ function applyMockTransform(text: string, options: ToolOptions): string {
   let out = text;
 
   // Strip common AI openers
+  out = out.replace(/^It is (more )?important (to|that|for)[\w\s]* to\s*/i, "");
   out = out.replace(/^In today'?s fast-?paced world,?\s*/i, "");
   out = out.replace(/^It is (more )?important (to|that) (note|understand|recognize) that\s*/i, "");
 
@@ -55,6 +56,13 @@ function applyMockTransform(text: string, options: ToolOptions): string {
   out = out.replace(/\bIn conclusion,?\s*/gi, "");
   out = out.replace(/\bIt is worth noting that\s*/gi, "");
   out = out.replace(/\bAdditionally,?\s*/gi, "");
+
+  // Human phrasing swaps
+  out = out.replace(/\bfar more words than necessary\b/gi, "more words than needed");
+  out = out.replace(/\bmost impactful\b/gi, "stuff that actually works");
+  out = out.replace(/\bstraightforward\b/gi, "way simpler");
+  out = out.replace(/\bprioritize effective communication\b/gi, "communicate better");
+  out = out.replace(/\bhow your message is received\b/gi, "whether people actually get it");
 
   // Replace corporate verbs
   out = out.replace(/\bleverag(e|ing)\b/gi, "us$1");
@@ -71,18 +79,18 @@ function applyMockTransform(text: string, options: ToolOptions): string {
   out = out.replace(/\bkey strategies\b/gi, "ways");
 
   // Mode-specific transforms
-  if (options.mode === "Frustrated Rant") {
+  if (options.mode === "Rant Mode") {
     out = out.replace(/\.\s+/g, ". ").trim();
     out = out.charAt(0).toLowerCase() + out.slice(1);
     if (options.intensity === "Aggressive") out = out.replace(/\.$/, ". seriously.");
   }
 
-  if (options.mode === "Sharp Opinion") {
+  if (options.mode === "Hot Take") {
     out = out.replace(/you will be/gi, "you're");
     out = out.replace(/you should/gi, "just");
   }
 
-  if (options.mode === "Casual Internet") {
+  if (options.mode === "Casual / Real") {
     out = out.replace(/\bprofessionals\b/gi, "people");
     out = out.replace(/\bmessaging\b/gi, "writing");
     out = out.replace(/\bimplemented\b/gi, "used");
@@ -104,23 +112,23 @@ function diffChanges(before: string, after: string, options: ToolOptions): strin
   const changes: string[] = [];
 
   if (/in today'?s/i.test(before) && !/in today'?s/i.test(after))
-    changes.push("removed generic opener");
+    changes.push("killed the generic intro");
   if (/furthermore|in conclusion|additionally/i.test(before))
-    changes.push("stripped essay-style transitions");
+    changes.push("removed essay flow");
   if (/leverage|utilize|seamlessly/i.test(before))
-    changes.push("replaced corporate vocabulary");
+    changes.push("simplified the language");
   if (/significant(ly)?|comprehensive/i.test(before))
-    changes.push("cut filler amplifiers");
+    changes.push("cut the filler");
   if (options.mode === "Frustrated Rant")
-    changes.push("shifted tone to frustrated voice");
+    changes.push("made it sound like a person");
   if (options.intensity === "Aggressive")
-    changes.push("increased directness under aggressive intensity");
+    changes.push("turned up the directness");
   if (options.emotion !== "Confidence")
-    changes.push(`applied ${options.emotion.toLowerCase()} emotional register`);
+    changes.push("matched your voice");
   if (changes.length < 2)
-    changes.push("reduced transition-heavy phrasing");
+    changes.push("broke up the structure");
   if (changes.length < 3)
-    changes.push("broke paragraph symmetry");
+    changes.push("dropped the perfect symmetry");
 
   return changes;
 }

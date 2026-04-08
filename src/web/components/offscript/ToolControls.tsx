@@ -1,6 +1,6 @@
 import { DUR } from "../motion";
 
-export type Mode      = "Raw Human" | "Frustrated Rant" | "Founder Voice" | "Casual Internet" | "Sharp Opinion";
+export type Mode      = "Raw Human" | "Rant Mode" | "Founder Voice" | "Casual / Real" | "Hot Take";
 export type Emotion   = "Frustration" | "Disbelief" | "Curiosity" | "Confidence" | "Annoyance";
 export type Intensity = "Light" | "Medium" | "Aggressive";
 
@@ -21,9 +21,9 @@ interface Props {
   onSample:  () => void;
 }
 
-const SAMPLE = `In today's fast-paced world, it is more important than ever to leverage the power of effective communication. This comprehensive guide will walk you through the key strategies that successful professionals use to enhance their messaging. Furthermore, it is worth noting that clear, concise communication can significantly improve your outcomes. In conclusion, by implementing these proven techniques, you will be well-positioned to achieve your goals.`;
+const SAMPLE = `It is more important than ever to prioritize effective communication in today's fast-paced world. Leveraging the right strategies can significantly improve how your message is received. Furthermore, it is worth noting that most professionals use far more words than necessary to convey their ideas. In conclusion, the most impactful communication is often the simplest — and the stuff that actually works is straightforward.`;
 
-const MODES:      Mode[]      = ["Raw Human", "Frustrated Rant", "Founder Voice", "Casual Internet", "Sharp Opinion"];
+const MODES:      Mode[]      = ["Raw Human", "Rant Mode", "Founder Voice", "Casual / Real", "Hot Take"];
 const EMOTIONS:   Emotion[]   = ["Frustration", "Disbelief", "Curiosity", "Confidence", "Annoyance"];
 const INTENSITIES: Intensity[] = ["Light", "Medium", "Aggressive"];
 
@@ -69,7 +69,7 @@ export function ToolControls({ input, options, loading, onInput, onOptions, onSu
         <textarea
           value={input}
           onChange={e => onInput(e.target.value)}
-          placeholder="Paste AI-written content here…"
+          placeholder="Paste your ChatGPT output here…"
           rows={9}
           style={{
             width: "100%", boxSizing: "border-box",
@@ -121,7 +121,7 @@ export function ToolControls({ input, options, loading, onInput, onOptions, onSu
           onMouseEnter={e => { if (!loading && input.trim()) (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
         >
-          {loading ? "Processing…" : "De-AI This →"}
+          {loading ? "Processing…" : "Make it sound human →"}
         </button>
 
         <button onClick={onSample} style={{

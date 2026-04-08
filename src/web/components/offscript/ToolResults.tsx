@@ -53,12 +53,12 @@ export function ToolResults({ result }: Props) {
         flexWrap: "wrap",
       }}>
         <div>
-          <div style={{ fontSize: "0.6rem", color: "#1e2a32", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Before</div>
+          <div style={{ fontSize: "0.6rem", color: "#1e2a32", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Feels like AI</div>
           <ScoreDot score={result.scoreBefore} />
         </div>
         <div style={{ fontSize: "1.125rem", color: "#1a2530", fontWeight: 300 }}>→</div>
         <div>
-          <div style={{ fontSize: "0.6rem", color: "#1e2a32", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>After</div>
+          <div style={{ fontSize: "0.6rem", color: "#1e2a32", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Feels human</div>
           <ScoreDot score={result.scoreAfter} />
         </div>
         <div style={{ marginLeft: "auto" }}>
@@ -105,6 +105,9 @@ export function ToolResults({ result }: Props) {
         border: "1px solid rgba(255,255,255,0.06)",
         borderRadius: 10,
       }}>
+        <div style={{ fontSize: "0.7rem", color: "#2e3c48", marginBottom: "0.875rem", letterSpacing: "-0.01em" }}>
+          same idea. less AI.
+        </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.875rem" }}>
           <div style={{ fontSize: "0.6rem", color: "#2a3540", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>Output</div>
           <button onClick={copy} style={{
@@ -123,6 +126,16 @@ export function ToolResults({ result }: Props) {
           {result.output}
         </p>
       </div>
+
+      {/* Tagline */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: DUR.enter, delay: 0.3 }}
+        style={{ fontSize: "0.75rem", color: "#2e3c48", margin: 0, textAlign: "center", letterSpacing: "-0.01em" }}
+      >
+        same idea, different feel
+      </motion.p>
     </motion.div>
   );
 }
