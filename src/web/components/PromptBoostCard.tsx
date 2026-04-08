@@ -32,8 +32,8 @@ export function PromptBoostCard() {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: DUR.enter, ease: EASE_OUT, delay: 0.07 }}
     >
-      <TiltCard accentColor="rgba(168,85,247,0.35)" style={{ padding: "3.5rem" }} href={HREF}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
+      <TiltCard accentColor="rgba(168,85,247,0.35)" style={{ padding: "3.5rem" }} className="sb-card-pad" href={HREF}>
+        <div className="sb-card-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
 
           {/* Left */}
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
@@ -86,7 +86,7 @@ export function PromptBoostCard() {
           </div>
 
           {/* Right — before/after prompt viz */}
-          <div style={{
+          <div className="sb-card-right" style={{
             display: "flex", flexDirection: "column",
             gap: "1.25rem", padding: "2rem 0", justifyContent: "center",
           }}>

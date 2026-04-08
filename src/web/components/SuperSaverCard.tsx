@@ -4,7 +4,7 @@ import { TiltCard } from "./TiltCard";
 import { CardCTA } from "./CardCTA";
 import { DUR, EASE_OUT, Y_ENTER, prefersReducedMotion } from "./motion";
 
-const HREF = "https://github.com/siddhantsrivastava7-pixel/super-saver";
+const HREF = "/supersaver";
 
 const logs = [
   { text: "$ supersaver analyze ./project",         delay: 0.30, color: "#3d4d5c" },
@@ -31,8 +31,8 @@ export function SuperSaverCard() {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: DUR.enter, ease: EASE_OUT, delay: 0.07 }}
     >
-      <TiltCard accentColor="rgba(34,197,94,0.35)" style={{ padding: "3.5rem" }} href={HREF} external>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
+      <TiltCard accentColor="rgba(34,197,94,0.35)" style={{ padding: "3.5rem" }} className="sb-card-pad" href={HREF}>
+        <div className="sb-card-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
 
           {/* Left */}
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
@@ -85,7 +85,7 @@ export function SuperSaverCard() {
           </div>
 
           {/* Right — terminal */}
-          <div style={{
+          <div className="sb-card-right" style={{
             display: "flex", flexDirection: "column",
             gap: "2rem", padding: "2rem 0", justifyContent: "center",
           }}>

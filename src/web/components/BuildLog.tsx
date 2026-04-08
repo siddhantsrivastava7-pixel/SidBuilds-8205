@@ -109,6 +109,7 @@ function TimelineRow({ entry, index }: { entry: Entry; index: number }) {
   return (
     <motion.div
       ref={ref as React.RefObject<HTMLDivElement>}
+      className="sb-timeline-row"
       initial={{ opacity: 0, x: noMotion ? 0 : -8 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: DUR.enter, ease: EASE_OUT, delay: index * 0.04 }}
@@ -215,7 +216,7 @@ export function BuildLog() {
   const noMotion = prefersReducedMotion();
 
   return (
-    <section id="builds" style={{ padding: "0 2.5rem", marginTop: 120 }}>
+    <section id="builds" className="sb-section" style={{ padding: "0 2.5rem", marginTop: 120 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
 
         <motion.div

@@ -130,7 +130,68 @@
   border-radius: 2px;
 }
 
-/* Timeline line */
+/* ── Mobile responsive overrides ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* Navbar — hide nav links, show only brand */
+  .sb-nav-links { display: none !important; }
+  .sb-nav-cta   { display: none !important; }
+
+  /* Section padding — override inline style shorthand */
+  .sb-section {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  /* Hero inner */
+  .sb-hero-inner {
+    padding-top: 90px !important;
+    padding-bottom: 60px !important;
+  }
+
+  /* Product cards — stack to single column */
+  .sb-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+  /* Hide data/terminal viz panels — left col is enough on mobile */
+  .sb-card-right { display: none !important; }
+  /* Card padding */
+  .sb-card-pad { padding: 1.75rem !important; }
+
+  /* Slab outer padding */
+  .sb-slab { padding: 0.75rem !important; }
+
+  /* Timeline rows — date above content */
+  .sb-timeline-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.25rem !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  /* Principles rows */
+  .sb-principle-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.625rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  .sb-principle-num { display: none !important; }
+
+  /* Footer columns → single column */
+  .sb-footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    margin-bottom: 3rem !important;
+  }
+
+  /* Stats — tighter wrap */
+  .sb-stats {
+    gap: 1rem !important;
+  }
+}
+
 .timeline-line {
   position: relative;
 }

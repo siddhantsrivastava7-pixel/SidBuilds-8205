@@ -7,7 +7,7 @@ export function About() {
   const noMotion = prefersReducedMotion();
 
   return (
-    <section id="about" style={{ padding: "0 2.5rem", marginTop: 160 }}>
+    <section id="about" className="sb-section" style={{ padding: "0 2.5rem", marginTop: 160 }}>
       <div ref={ref as React.RefObject<HTMLDivElement>} style={{ maxWidth: 1200, margin: "0 auto" }}>
         <motion.div
           initial={{ opacity: 0, y: noMotion ? 0 : Y_SMALL }}

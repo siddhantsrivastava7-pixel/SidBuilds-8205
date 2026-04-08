@@ -5,6 +5,7 @@ import { SPRING_TILT, MAX_TILT, DUR, prefersReducedMotion } from "./motion";
 interface TiltCardProps {
   children: ReactNode;
   style?: React.CSSProperties;
+  className?: string;
   accentColor?: string;
   href?: string;
   external?: boolean;
@@ -18,6 +19,7 @@ function isTouchDevice() {
 export function TiltCard({
   children,
   style,
+  className,
   accentColor = "rgba(59,130,246,0.4)",
   href,
   external = false,
@@ -78,10 +80,12 @@ export function TiltCard({
     willChange: "transform",
     ...style,
   };
+  const cardClassName = className;
 
   const inner = (
     <motion.div
       ref={cardRef}
+      className={cardClassName}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

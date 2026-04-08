@@ -40,7 +40,7 @@ export function Products() {
   const { slabRef, lightRef, onMouseMove, onMouseEnter, onMouseLeave } = useSlabCursor();
 
   return (
-    <section id="products" style={{ padding: "0 2.5rem", marginTop: 180 }}>
+    <section id="products" className="sb-section" style={{ padding: "0 2.5rem", marginTop: 180 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
 
         {/* Heading */}
@@ -63,6 +63,7 @@ export function Products() {
         {/* Showcase slab — with cursor surface light */}
         <div
           ref={slabRef}
+          className="sb-slab"
           onMouseMove={reduced ? undefined : onMouseMove}
           onMouseEnter={reduced ? undefined : onMouseEnter}
           onMouseLeave={reduced ? undefined : onMouseLeave}

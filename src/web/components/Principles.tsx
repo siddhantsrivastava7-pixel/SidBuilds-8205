@@ -33,7 +33,7 @@ export function Principles() {
   const noMotion = prefersReducedMotion();
 
   return (
-    <section id="thinking" style={{ padding: "0 2.5rem", marginTop: 220 }}>
+    <section id="thinking" className="sb-section" style={{ padding: "0 2.5rem", marginTop: 220 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <motion.div
           ref={ref as React.RefObject<HTMLDivElement>}
@@ -76,6 +76,7 @@ function PrincipleRow({ principle, index }: { principle: (typeof principles)[0];
   return (
     <motion.div
       ref={ref as React.RefObject<HTMLDivElement>}
+      className="sb-principle-row"
       initial={{ opacity: 0 }}
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: DUR.enter, ease: EASE_OUT, delay: base }}
@@ -99,6 +100,7 @@ function PrincipleRow({ principle, index }: { principle: (typeof principles)[0];
 
       {/* Number */}
       <motion.div
+        className="sb-principle-num"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: DUR.base, ease: EASE_OUT, delay: base + T_NUM }}

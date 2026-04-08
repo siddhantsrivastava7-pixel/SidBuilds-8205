@@ -63,6 +63,7 @@ export function Hero() {
   return (
     <section
       id="hero"
+      className="sb-section"
       style={{
         position: "relative",
         minHeight: "100vh",
@@ -74,14 +75,17 @@ export function Hero() {
     >
       <AmbientGlow />
 
-      <div style={{
-        maxWidth: 1200,
-        margin: "0 auto",
-        width: "100%",
-        paddingTop: 140,
-        paddingBottom: 100,
-        position: "relative",
-      }}>
+      <div
+        className="sb-hero-inner"
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          width: "100%",
+          paddingTop: 140,
+          paddingBottom: 100,
+          position: "relative",
+        }}
+      >
 
         {/* Badge */}
         <motion.div {...makeReveal(0.05)} style={{ marginBottom: "3rem" }}>
@@ -204,7 +208,7 @@ export function Hero() {
         </motion.div>
 
         {/* Stats */}
-        <motion.div {...makeReveal(0.62)} style={{
+        <motion.div {...makeReveal(0.62)} className="sb-stats" style={{
           display: "flex",
           gap: "2.5rem",
           alignItems: "center",

@@ -8,6 +8,7 @@ export function Footer() {
   return (
     <footer
       ref={ref as React.RefObject<HTMLDivElement>}
+      className="sb-section"
       style={{ padding: "0 2.5rem", marginTop: 160, paddingBottom: "4rem" }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -17,6 +18,7 @@ export function Footer() {
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: DUR.enter, ease: EASE_OUT }}
+            className="sb-footer-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "1.5fr 1fr 1fr",

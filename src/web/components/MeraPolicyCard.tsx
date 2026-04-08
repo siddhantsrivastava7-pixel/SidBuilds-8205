@@ -31,8 +31,8 @@ export function MeraPolicyCard() {
       transition={{ duration: DUR.enter, ease: EASE_OUT }}
       style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
     >
-      <TiltCard accentColor="rgba(59,130,246,0.4)" style={{ padding: "3.5rem" }} href={HREF} external>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
+      <TiltCard accentColor="rgba(59,130,246,0.4)" style={{ padding: "3.5rem" }} className="sb-card-pad" href={HREF} external>
+        <div className="sb-card-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
 
           {/* Left */}
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
@@ -85,7 +85,7 @@ export function MeraPolicyCard() {
           </div>
 
           {/* Right — data viz */}
-          <div style={{
+          <div className="sb-card-right" style={{
             display: "flex", flexDirection: "column",
             gap: "2rem", padding: "2rem 0", justifyContent: "center",
           }}>
