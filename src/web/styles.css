@@ -190,6 +190,21 @@
   .sb-stats {
     gap: 1rem !important;
   }
+
+  /* OffScript tool grid — stack input above output */
+  .sb-tool-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Global animation keyframes ─────────────────────────────────────────── */
+@keyframes sb-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.92); }
+}
+
+@keyframes sb-spin {
+  to { transform: rotate(360deg); }
 }
 
 .timeline-line {
