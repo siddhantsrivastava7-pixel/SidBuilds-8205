@@ -89,8 +89,9 @@ function MiniNav() {
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <a href="/" style={{ textDecoration: "none" }}>
           <span style={{ fontSize: "0.9rem", fontWeight: 600, letterSpacing: "-0.03em" }}>
-            <span style={{ color: "#ffffff" }}>Sid</span>
-            <span style={{ color: "rgba(255,255,255,0.45)" }}>Builds</span>
+            <span style={{ color: "#22c55e" }}>Super Saver</span>
+            <span style={{ color: "rgba(255,255,255,0.25)" }}> by </span>
+            <span style={{ color: "rgba(255,255,255,0.45)" }}>SidBuilds</span>
           </span>
         </a>
         <a href={GITHUB} target="_blank" rel="noopener noreferrer" style={{
