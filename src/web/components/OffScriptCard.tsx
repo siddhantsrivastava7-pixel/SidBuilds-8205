@@ -78,7 +78,7 @@ export function OffScriptCard() {
               ))}
             </div>
 
-            <CardCTA label="Try it free" color={AMBER} hoverColor="#e6eaf0" />
+            <CardCTA label="Try it free" color={AMBER} hoverColor="#f0b865" />
           </div>
 
           {/* Right — diff viz */}

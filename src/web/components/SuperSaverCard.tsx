@@ -81,7 +81,7 @@ export function SuperSaverCard() {
               ))}
             </div>
 
-            <CardCTA label="Save tokens now" color="#4a9e6a" hoverColor="#e6eaf0" />
+            <CardCTA label="Save tokens now" color="#4a9e6a" hoverColor="#4ade80" />
           </div>
 
           {/* Right — terminal */}

@@ -82,7 +82,7 @@ export function PromptBoostCard() {
               ))}
             </div>
 
-            <CardCTA label="Improve your prompts" color="#9a6ed8" hoverColor="#e6eaf0" />
+            <CardCTA label="Improve your prompts" color="#9a6ed8" hoverColor="#c4a0f5" />
           </div>
 
           {/* Right — before/after prompt viz */}

@@ -81,7 +81,7 @@ export function MeraPolicyCard() {
               ))}
             </div>
 
-            <CardCTA label="Analyze your portfolio" color="#6a9fd8" hoverColor="#e6eaf0" />
+            <CardCTA label="Analyze your portfolio" color="#22c55e" hoverColor="#4ade80" />
           </div>
 
           {/* Right — data viz */}

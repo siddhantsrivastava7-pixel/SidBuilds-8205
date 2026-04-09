@@ -59,6 +59,13 @@ const entries: Entry[] = [
     tag: "Launch",
     tagColor: "#22c55e",
   },
+  {
+    date: "Apr 2026",
+    title: "Building Recall",
+    description: "Turns saved bookmarks, notes, and links into a searchable memory layer.",
+    tag: "Building",
+    tagColor: "#3b82f6",
+  },
 ];
 
 // ─── Tag ─────────────────────────────────────────────────────────────────────
@@ -98,7 +105,7 @@ function TagPill({ tag, color, delay = "0s" }: { tag: string; color: string; del
 
 // Tag delay offsets so they don't all pulse in sync
 const tagDelays: Record<string, string> = {
-  Funding: "0s", Milestone: "1.2s", Pivot: "2.4s", Launch: "3.6s",
+  Funding: "0s", Milestone: "1.2s", Pivot: "2.4s", Launch: "3.6s", Building: "4.8s",
 };
 
 // ─── Row ─────────────────────────────────────────────────────────────────────
