@@ -131,25 +131,23 @@ function MacSetupModal({ onClose }: { onClose: () => void }) {
 
         {/* Note + Download */}
         <p style={{ fontSize: "0.75rem", color: "#2a3540", margin: 0, marginBottom: "1.25rem", lineHeight: 1.6 }}>
-          Future updates will be delivered automatically in-app — you won't need to repeat these steps.
+          Your download has started. Future updates will be delivered automatically in-app — you won't need to repeat these steps.
         </p>
-        <a
-          href={DOWNLOADS.mac.url}
+        <button
           onClick={onClose}
           style={{
             display: "flex", alignItems: "center", justifyContent: "center",
             padding: "0.8125rem", width: "100%", boxSizing: "border-box",
-            background: "#3b82f6", color: "#fff",
-            border: "none", borderRadius: 9,
-            fontSize: "0.9rem", fontWeight: 700, cursor: "pointer",
-            textDecoration: "none", letterSpacing: "-0.01em",
-            transition: "background 0.15s ease",
+            background: "rgba(59,130,246,0.1)", color: "#7baef8",
+            border: "1px solid rgba(59,130,246,0.2)", borderRadius: 9,
+            fontSize: "0.9rem", fontWeight: 600, cursor: "pointer",
+            letterSpacing: "-0.01em", transition: "background 0.15s ease",
           }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "#2563eb")}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "#3b82f6")}
+          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.18)")}
+          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.1)")}
         >
-          Download Recall for macOS →
-        </a>
+          Got it
+        </button>
       </motion.div>
     </div>
   );
@@ -233,9 +231,19 @@ function DownloadButton({ size = "md", onMacClick }: { size?: "md" | "lg"; onMac
           >
             <span style={{ fontSize: "1rem" }}>🪟</span> Windows
           </a>
-          {/* macOS — opens setup modal */}
+          {/* macOS — starts download + opens setup modal */}
           <button
-            onClick={() => { setOpen(false); onMacClick(); }}
+            onClick={() => {
+              setOpen(false);
+              // Trigger download immediately
+              const a = document.createElement("a");
+              a.href = DOWNLOADS.mac.url;
+              a.download = "";
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              onMacClick();
+            }}
             style={{
               display: "flex", alignItems: "center", gap: "0.625rem",
               padding: "0.75rem 1.125rem", width: "100%",
