@@ -43,13 +43,125 @@ function Divider() {
   return <div style={{ height: 1, background: "rgba(255,255,255,0.04)" }} />;
 }
 
+// ─── macOS Setup Modal ────────────────────────────────────────────────────────
+function MacSetupModal({ onClose }: { onClose: () => void }) {
+  const [copied1, setCopied1] = useState(false);
+  const [copied2, setCopied2] = useState(false);
+
+  const copy = (text: string, which: 1 | 2) => {
+    navigator.clipboard?.writeText(text);
+    if (which === 1) { setCopied1(true); setTimeout(() => setCopied1(false), 1800); }
+    else             { setCopied2(true); setTimeout(() => setCopied2(false), 1800); }
+  };
+
+  const cmd1 = "sudo xattr -rd com.apple.quarantine /Applications/Recall.app";
+  const cmd2 = "open /Applications/Recall.app";
+
+  const steps = [
+    { n: "01", title: "Download the file", body: "Click the download button to get Recall.app.tar.gz" },
+    { n: "02", title: "Extract it", body: "Double-click the .tar.gz file — macOS will extract Recall.app automatically." },
+    { n: "03", title: "Move to Applications", body: "Drag Recall.app into your Applications folder." },
+    { n: "04", title: "Run these commands in Terminal", body: null },
+  ];
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 100,
+      background: "rgba(4,6,9,0.88)", backdropFilter: "blur(14px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "1rem",
+    }} onClick={onClose}>
+      <motion.div
+        initial={{ opacity: 0, y: 18, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "rgba(10,14,20,0.99)",
+          border: "1px solid rgba(59,130,246,0.15)",
+          borderRadius: 16, padding: "2rem 2.25rem",
+          width: "100%", maxWidth: 480,
+          boxShadow: "0 40px 80px rgba(0,0,0,0.55)",
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.75rem" }}>
+          <div>
+            <div style={{ fontSize: "0.625rem", fontWeight: 600, color: "#3b82f6", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.375rem" }}>
+              🍎 macOS Beta · First-time Setup
+            </div>
+            <h3 style={{ fontSize: "1.125rem", fontWeight: 700, color: "#e6eaf0", letterSpacing: "-0.03em", margin: 0 }}>
+              A few extra steps — just once.
+            </h3>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#3d4d5c", cursor: "pointer", fontSize: "1.25rem", lineHeight: 1, padding: 0 }}>×</button>
+        </div>
+
+        {/* Steps */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, marginBottom: "1.5rem" }}>
+          {steps.map((s, i) => (
+            <div key={s.n} style={{ display: "grid", gridTemplateColumns: "32px 1fr", gap: "0.75rem", padding: "0.875rem 0", borderBottom: i < steps.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+              <div style={{ fontSize: "0.65rem", fontWeight: 600, color: "#1e2a32", letterSpacing: "0.06em", paddingTop: 3 }}>{s.n}</div>
+              <div>
+                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "#6a7a88", marginBottom: s.body ? "0.25rem" : 0 }}>{s.title}</div>
+                {s.body && <p style={{ fontSize: "0.8125rem", color: "#2e3c48", lineHeight: 1.6, margin: 0 }}>{s.body}</p>}
+                {s.n === "04" && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "0.625rem" }}>
+                    {[{ cmd: cmd1, copied: copied1, which: 1 as const }, { cmd: cmd2, copied: copied2, which: 2 as const }].map(({ cmd, copied, which }) => (
+                      <div key={cmd} style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 0.875rem", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 7 }}>
+                        <code style={{ flex: 1, fontSize: "0.75rem", color: "#7baef8", fontFamily: "monospace", wordBreak: "break-all" }}>{cmd}</code>
+                        <button onClick={() => copy(cmd, which)} style={{
+                          padding: "0.2rem 0.5rem", flexShrink: 0,
+                          background: copied ? "rgba(34,197,94,0.12)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${copied ? "rgba(34,197,94,0.25)" : "rgba(255,255,255,0.08)"}`,
+                          borderRadius: 5, color: copied ? "#22c55e" : "#4a5562",
+                          fontSize: "0.65rem", fontWeight: 600, cursor: "pointer",
+                          transition: "all 0.15s ease",
+                        }}>
+                          {copied ? "✓" : "Copy"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Note + Download */}
+        <p style={{ fontSize: "0.75rem", color: "#2a3540", margin: 0, marginBottom: "1.25rem", lineHeight: 1.6 }}>
+          Future updates will be delivered automatically in-app — you won't need to repeat these steps.
+        </p>
+        <a
+          href={DOWNLOADS.mac.url}
+          onClick={onClose}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: "0.8125rem", width: "100%", boxSizing: "border-box",
+            background: "#3b82f6", color: "#fff",
+            border: "none", borderRadius: 9,
+            fontSize: "0.9rem", fontWeight: 700, cursor: "pointer",
+            textDecoration: "none", letterSpacing: "-0.01em",
+            transition: "background 0.15s ease",
+          }}
+          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "#2563eb")}
+          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "#3b82f6")}
+        >
+          Download Recall for macOS →
+        </a>
+      </motion.div>
+    </div>
+  );
+}
+
 // ─── Download Split Button ────────────────────────────────────────────────────
 const DOWNLOADS = {
   windows: { label: "Windows", url: "https://github.com/siddhantsrivastava7-pixel/recall/releases/download/v0.1.3/Recall_0.1.3_x64_en-US.msi" },
   mac:     { label: "macOS (beta)", url: "https://github.com/siddhantsrivastava7-pixel/recall/releases/download/v0.1.3/Recall.app.tar.gz" },
 } as const;
 
-function DownloadButton({ size = "md" }: { size?: "md" | "lg" }) {
+function DownloadButton({ size = "md", onMacClick }: { size?: "md" | "lg"; onMacClick: () => void }) {
   const [open, setOpen] = useState(false);
   const reduced = prefersReducedMotion();
   const pad  = size === "lg" ? "0.8125rem 1.75rem" : "0.6875rem 1.375rem";
@@ -105,25 +217,38 @@ function DownloadButton({ size = "md" }: { size?: "md" | "lg" }) {
             boxShadow: "0 16px 40px rgba(0,0,0,0.4)",
           }}
         >
-          {Object.values(DOWNLOADS).map(({ label, url }) => (
-            <a
-              key={label}
-              href={url}
-              onClick={() => setOpen(false)}
-              style={{
-                display: "flex", alignItems: "center", gap: "0.625rem",
-                padding: "0.75rem 1.125rem",
-                color: "#8b98a5", fontSize: "0.875rem", fontWeight: 500,
-                textDecoration: "none", transition: "background 0.12s ease, color 0.12s ease",
-                borderBottom: label === "Windows" ? "1px solid rgba(255,255,255,0.04)" : "none",
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.08)"; (e.currentTarget as HTMLElement).style.color = "#e6eaf0"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#8b98a5"; }}
-            >
-              <span style={{ fontSize: "1rem" }}>{label === "Windows" ? "🪟" : "🍎"}</span>
-              {label}
-            </a>
-          ))}
+          {/* Windows */}
+          <a
+            href={DOWNLOADS.windows.url}
+            onClick={() => setOpen(false)}
+            style={{
+              display: "flex", alignItems: "center", gap: "0.625rem",
+              padding: "0.75rem 1.125rem",
+              color: "#8b98a5", fontSize: "0.875rem", fontWeight: 500,
+              textDecoration: "none", transition: "background 0.12s ease, color 0.12s ease",
+              borderBottom: "1px solid rgba(255,255,255,0.04)",
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.08)"; (e.currentTarget as HTMLElement).style.color = "#e6eaf0"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#8b98a5"; }}
+          >
+            <span style={{ fontSize: "1rem" }}>🪟</span> Windows
+          </a>
+          {/* macOS — opens setup modal */}
+          <button
+            onClick={() => { setOpen(false); onMacClick(); }}
+            style={{
+              display: "flex", alignItems: "center", gap: "0.625rem",
+              padding: "0.75rem 1.125rem", width: "100%",
+              background: "none", border: "none",
+              color: "#8b98a5", fontSize: "0.875rem", fontWeight: 500,
+              cursor: "pointer", textAlign: "left",
+              transition: "background 0.12s ease, color 0.12s ease",
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.08)"; (e.currentTarget as HTMLElement).style.color = "#e6eaf0"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#8b98a5"; }}
+          >
+            <span style={{ fontSize: "1rem" }}>🍎</span> macOS (beta)
+          </button>
         </motion.div>
       )}
     </div>
@@ -331,7 +456,7 @@ function MiniNav({ onTrialClick }: { onTrialClick: () => void }) {
 }
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
-function Hero({ onTrialClick }: { onTrialClick: () => void }) {
+function Hero({ onTrialClick, onMacClick }: { onTrialClick: () => void; onMacClick: () => void }) {
   const reduced = prefersReducedMotion();
   const r = (delay: number) => ({
     initial: { opacity: 0, y: reduced ? 0 : Y_ENTER },
@@ -374,7 +499,7 @@ function Hero({ onTrialClick }: { onTrialClick: () => void }) {
         </motion.p>
 
         <motion.div {...r(0.42)} style={{ display: "flex", gap: "0.875rem", alignItems: "center", flexWrap: "wrap" }}>
-          <DownloadButton size="md" />
+          <DownloadButton size="md" onMacClick={onMacClick} />
 
           <motion.button
             onClick={onTrialClick}
@@ -571,7 +696,7 @@ function Features() {
 }
 
 // ─── FINAL CTA ────────────────────────────────────────────────────────────────
-function FinalCTA({ onTrialClick }: { onTrialClick: () => void }) {
+function FinalCTA({ onTrialClick, onMacClick }: { onTrialClick: () => void; onMacClick: () => void }) {
   const reduced = prefersReducedMotion();
 
   return (
@@ -599,7 +724,7 @@ function FinalCTA({ onTrialClick }: { onTrialClick: () => void }) {
 
         <Reveal delay={0.16}>
           <div style={{ display: "flex", gap: "1.25rem", alignItems: "center", flexWrap: "wrap" }}>
-            <DownloadButton size="lg" />
+            <DownloadButton size="lg" onMacClick={onMacClick} />
 
             <motion.button
               onClick={onTrialClick}
@@ -637,6 +762,7 @@ function FinalCTA({ onTrialClick }: { onTrialClick: () => void }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Recall() {
   const [showTrial, setShowTrial] = useState(false);
+  const [showMacSetup, setShowMacSetup] = useState(false);
   return (
     <div style={{ background: "#05070a", minHeight: "100vh", position: "relative" }}>
       <div style={{
@@ -646,13 +772,14 @@ export default function Recall() {
       }} />
       <div style={{ position: "relative", zIndex: 2 }}>
         <MiniNav onTrialClick={() => setShowTrial(true)} />
-        <Hero onTrialClick={() => setShowTrial(true)} />
+        <Hero onTrialClick={() => setShowTrial(true)} onMacClick={() => setShowMacSetup(true)} />
         <Pain />
         <Shift />
         <Features />
-        <FinalCTA onTrialClick={() => setShowTrial(true)} />
+        <FinalCTA onTrialClick={() => setShowTrial(true)} onMacClick={() => setShowMacSetup(true)} />
       </div>
       {showTrial && <TrialKeyModal onClose={() => setShowTrial(false)} />}
+      {showMacSetup && <MacSetupModal onClose={() => setShowMacSetup(false)} />}
     </div>
   );
 }
