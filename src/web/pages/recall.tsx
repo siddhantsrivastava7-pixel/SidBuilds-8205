@@ -1,5 +1,5 @@
 import { motion, useAnimationFrame } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useInView } from "../components/useInView";
 import {
   DUR, EASE_OUT, HOVER_LIFT, Y_ENTER, Y_SMALL,
@@ -43,6 +43,136 @@ function Divider() {
   return <div style={{ height: 1, background: "rgba(255,255,255,0.04)" }} />;
 }
 
+// ─── Trial Key Modal ──────────────────────────────────────────────────────────
+function TrialKeyModal({ onClose }: { onClose: () => void }) {
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [key, setKey] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const generate = async () => {
+    setState("loading");
+    try {
+      const res = await fetch("/api/generate-trial", { method: "POST" });
+      if (res.status === 429) { setState("error"); return; }
+      const data = await res.json<{ key?: string }>();
+      if (data.key) { setKey(data.key); setState("done"); }
+      else setState("error");
+    } catch { setState("error"); }
+  };
+
+  const copy = () => {
+    navigator.clipboard?.writeText(key);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 100,
+      background: "rgba(4,6,9,0.85)", backdropFilter: "blur(12px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "1rem",
+    }} onClick={onClose}>
+      <motion.div
+        initial={{ opacity: 0, y: 16, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "rgba(10,14,20,0.98)",
+          border: "1px solid rgba(59,130,246,0.15)",
+          borderRadius: 16, padding: "2rem 2.25rem",
+          width: "100%", maxWidth: 420,
+          boxShadow: "0 32px 64px rgba(0,0,0,0.5)",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
+          <div>
+            <div style={{ fontSize: "0.625rem", fontWeight: 600, color: "#3b82f6", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.375rem" }}>
+              Recall · 7-Day Trial
+            </div>
+            <h3 style={{ fontSize: "1.125rem", fontWeight: 700, color: "#e6eaf0", letterSpacing: "-0.03em", margin: 0 }}>
+              Get your trial key
+            </h3>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#3d4d5c", cursor: "pointer", fontSize: "1.25rem", lineHeight: 1, padding: 0 }}>×</button>
+        </div>
+
+        {state === "idle" && (
+          <>
+            <p style={{ fontSize: "0.875rem", color: "#4a5562", lineHeight: 1.65, margin: 0, marginBottom: "1.5rem" }}>
+              Get a free 7-day trial key. No account required.
+            </p>
+            <button onClick={generate} style={{
+              width: "100%", padding: "0.8125rem",
+              background: "#3b82f6", color: "#fff",
+              border: "none", borderRadius: 9,
+              fontSize: "0.9rem", fontWeight: 700, cursor: "pointer",
+              letterSpacing: "-0.01em",
+            }}>
+              Generate Trial Key →
+            </button>
+          </>
+        )}
+
+        {state === "loading" && (
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.625rem", padding: "1.5rem 0", color: "#4a5562", fontSize: "0.875rem" }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3b82f6", display: "inline-block", animation: "sb-pulse 1.2s ease-in-out infinite" }} />
+            Generating…
+          </div>
+        )}
+
+        {state === "done" && (
+          <>
+            <p style={{ fontSize: "0.8125rem", color: "#4a5562", margin: 0, marginBottom: "0.875rem" }}>
+              Your trial key — valid for 7 days:
+            </p>
+            <div style={{
+              display: "flex", alignItems: "center", gap: "0.625rem",
+              padding: "0.875rem 1rem",
+              background: "rgba(59,130,246,0.06)",
+              border: "1px solid rgba(59,130,246,0.18)",
+              borderRadius: 9, marginBottom: "1rem",
+            }}>
+              <code style={{ flex: 1, fontSize: "1rem", fontWeight: 700, color: "#7baef8", letterSpacing: "0.04em", fontFamily: "monospace" }}>
+                {key}
+              </code>
+              <button onClick={copy} style={{
+                padding: "0.3rem 0.75rem",
+                background: copied ? "rgba(34,197,94,0.12)" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${copied ? "rgba(34,197,94,0.25)" : "rgba(255,255,255,0.08)"}`,
+                borderRadius: 6, color: copied ? "#22c55e" : "#6a7a88",
+                fontSize: "0.75rem", fontWeight: 600, cursor: "pointer",
+                transition: "all 0.15s ease", flexShrink: 0,
+              }}>
+                {copied ? "Copied ✓" : "Copy"}
+              </button>
+            </div>
+            <p style={{ fontSize: "0.75rem", color: "#2a3540", margin: 0 }}>
+              Save this key — you'll need it to activate Recall.
+            </p>
+          </>
+        )}
+
+        {state === "error" && (
+          <>
+            <p style={{ fontSize: "0.875rem", color: "#ef4444", margin: 0, marginBottom: "1rem" }}>
+              Too many requests or something went wrong. Try again later.
+            </p>
+            <button onClick={() => setState("idle")} style={{
+              background: "none", border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 7, padding: "0.5rem 1rem",
+              color: "#4a5562", fontSize: "0.8125rem", cursor: "pointer",
+            }}>
+              Try again
+            </button>
+          </>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
 // ─── Ambient glow ─────────────────────────────────────────────────────────────
 function AmbientGlow() {
   const ref = useRef<HTMLDivElement>(null);
@@ -62,7 +192,7 @@ function AmbientGlow() {
 }
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
-function MiniNav() {
+function MiniNav({ onTrialClick }: { onTrialClick: () => void }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
@@ -81,19 +211,19 @@ function MiniNav() {
           </span>
         </a>
         <div style={{ display: "flex", gap: "0.5rem" }}>
-          <a href="#trial" style={{
+          <button onClick={onTrialClick} style={{
             padding: "0.375rem 0.875rem",
             background: "transparent",
             border: "1px solid rgba(59,130,246,0.18)",
             borderRadius: 7, color: "#7baef8",
             fontSize: "0.8125rem", fontWeight: 500,
-            textDecoration: "none", transition: "background 0.2s ease",
+            cursor: "pointer", transition: "background 0.2s ease",
           }}
             onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.1)")}
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "transparent")}
           >
             Get Trial Key
-          </a>
+          </button>
           <a href="#cta" style={{
             padding: "0.375rem 0.875rem",
             background: "rgba(59,130,246,0.1)",
@@ -114,7 +244,7 @@ function MiniNav() {
 }
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
-function Hero() {
+function Hero({ onTrialClick }: { onTrialClick: () => void }) {
   const reduced = prefersReducedMotion();
   const r = (delay: number) => ({
     initial: { opacity: 0, y: reduced ? 0 : Y_ENTER },
@@ -173,8 +303,8 @@ function Hero() {
             Download Recall
           </motion.a>
 
-          <motion.a
-            href="#trial"
+          <motion.button
+            onClick={onTrialClick}
             whileHover={reduced ? {} : { y: HOVER_LIFT }}
             whileTap={reduced ? {} : { y: 0, scale: 0.985 }}
             transition={{ duration: DUR.fast, ease: "easeOut" }}
@@ -184,11 +314,11 @@ function Hero() {
               background: "transparent", color: "#7baef8",
               border: "1px solid rgba(59,130,246,0.22)",
               borderRadius: 9, fontSize: "0.875rem", fontWeight: 500,
-              textDecoration: "none", letterSpacing: "-0.01em",
+              cursor: "pointer", letterSpacing: "-0.01em",
             }}
           >
             Get Trial Key
-          </motion.a>
+          </motion.button>
 
           <motion.a
             href="#shift"
@@ -368,7 +498,7 @@ function Features() {
 }
 
 // ─── FINAL CTA ────────────────────────────────────────────────────────────────
-function FinalCTA() {
+function FinalCTA({ onTrialClick }: { onTrialClick: () => void }) {
   const reduced = prefersReducedMotion();
 
   return (
@@ -413,9 +543,8 @@ function FinalCTA() {
               Download Recall
             </motion.a>
 
-            <motion.a
-              id="trial"
-              href="#trial"
+            <motion.button
+              onClick={onTrialClick}
               whileHover={reduced ? {} : { y: HOVER_LIFT }}
               whileTap={reduced ? {} : { y: 0, scale: 0.985 }}
               transition={{ duration: DUR.fast, ease: "easeOut" }}
@@ -425,11 +554,11 @@ function FinalCTA() {
                 background: "transparent", color: "#7baef8",
                 border: "1px solid rgba(59,130,246,0.22)",
                 borderRadius: 10, fontSize: "0.9375rem", fontWeight: 600,
-                textDecoration: "none", letterSpacing: "-0.01em",
+                cursor: "pointer", letterSpacing: "-0.01em",
               }}
             >
               Get Trial Key
-            </motion.a>
+            </motion.button>
 
             <a href="/" style={{
               fontSize: "0.875rem", color: "#2a3540",
@@ -449,6 +578,7 @@ function FinalCTA() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Recall() {
+  const [showTrial, setShowTrial] = useState(false);
   return (
     <div style={{ background: "#05070a", minHeight: "100vh", position: "relative" }}>
       <div style={{
@@ -457,13 +587,14 @@ export default function Recall() {
         pointerEvents: "none", zIndex: 1, opacity: 0.25,
       }} />
       <div style={{ position: "relative", zIndex: 2 }}>
-        <MiniNav />
-        <Hero />
+        <MiniNav onTrialClick={() => setShowTrial(true)} />
+        <Hero onTrialClick={() => setShowTrial(true)} />
         <Pain />
         <Shift />
         <Features />
-        <FinalCTA />
+        <FinalCTA onTrialClick={() => setShowTrial(true)} />
       </div>
+      {showTrial && <TrialKeyModal onClose={() => setShowTrial(false)} />}
     </div>
   );
 }
