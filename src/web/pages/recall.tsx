@@ -43,6 +43,93 @@ function Divider() {
   return <div style={{ height: 1, background: "rgba(255,255,255,0.04)" }} />;
 }
 
+// ─── Download Split Button ────────────────────────────────────────────────────
+const DOWNLOADS = {
+  windows: { label: "Windows", url: "https://github.com/siddhantsrivastava7-pixel/recall/releases/download/v0.1.3/Recall_0.1.3_x64_en-US.msi" },
+  mac:     { label: "macOS (beta)", url: "https://github.com/siddhantsrivastava7-pixel/recall/releases/download/v0.1.3/Recall.app.tar.gz" },
+} as const;
+
+function DownloadButton({ size = "md" }: { size?: "md" | "lg" }) {
+  const [open, setOpen] = useState(false);
+  const reduced = prefersReducedMotion();
+  const pad  = size === "lg" ? "0.8125rem 1.75rem" : "0.6875rem 1.375rem";
+  const font = size === "lg" ? "0.9375rem"         : "0.875rem";
+  const chevPad = size === "lg" ? "0.8125rem 1rem" : "0.6875rem 0.875rem";
+
+  return (
+    <div style={{ position: "relative", display: "inline-flex" }}>
+      <div style={{ display: "flex", borderRadius: 9, overflow: "visible", boxShadow: "0 2px 12px rgba(59,130,246,0.18)" }}>
+        {/* Main label — not a link, just opens dropdown */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            padding: pad, background: "#3b82f6", color: "#fff",
+            border: "none", borderRight: "1px solid rgba(255,255,255,0.15)",
+            borderRadius: "9px 0 0 9px",
+            fontSize: font, fontWeight: 700, cursor: "pointer",
+            letterSpacing: "-0.01em", transition: "background 0.15s ease",
+          }}
+          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "#2563eb")}
+          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "#3b82f6")}
+        >
+          Download Recall
+        </button>
+        {/* Chevron */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            padding: chevPad, background: "#3b82f6", color: "#fff",
+            border: "none", borderRadius: "0 9px 9px 0",
+            fontSize: "0.75rem", cursor: "pointer",
+            transition: "background 0.15s ease",
+          }}
+          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "#2563eb")}
+          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "#3b82f6")}
+        >
+          {open ? "▲" : "▼"}
+        </button>
+      </div>
+
+      {/* Dropdown */}
+      {open && (
+        <motion.div
+          initial={reduced ? {} : { opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.12 }}
+          style={{
+            position: "absolute", top: "calc(100% + 6px)", left: 0,
+            background: "rgba(10,14,20,0.98)",
+            border: "1px solid rgba(59,130,246,0.18)",
+            borderRadius: 9, overflow: "hidden",
+            minWidth: 200, zIndex: 50,
+            boxShadow: "0 16px 40px rgba(0,0,0,0.4)",
+          }}
+        >
+          {Object.values(DOWNLOADS).map(({ label, url }) => (
+            <a
+              key={label}
+              href={url}
+              onClick={() => setOpen(false)}
+              style={{
+                display: "flex", alignItems: "center", gap: "0.625rem",
+                padding: "0.75rem 1.125rem",
+                color: "#8b98a5", fontSize: "0.875rem", fontWeight: 500,
+                textDecoration: "none", transition: "background 0.12s ease, color 0.12s ease",
+                borderBottom: label === "Windows" ? "1px solid rgba(255,255,255,0.04)" : "none",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.08)"; (e.currentTarget as HTMLElement).style.color = "#e6eaf0"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#8b98a5"; }}
+            >
+              <span style={{ fontSize: "1rem" }}>{label === "Windows" ? "🪟" : "🍎"}</span>
+              {label}
+            </a>
+          ))}
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 // ─── Trial Key Modal ──────────────────────────────────────────────────────────
 function TrialKeyModal({ onClose }: { onClose: () => void }) {
   const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
@@ -235,7 +322,7 @@ function MiniNav({ onTrialClick }: { onTrialClick: () => void }) {
             onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.18)")}
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.1)")}
           >
-            Download
+            ↓ Download
           </a>
         </div>
       </div>
@@ -287,21 +374,7 @@ function Hero({ onTrialClick }: { onTrialClick: () => void }) {
         </motion.p>
 
         <motion.div {...r(0.42)} style={{ display: "flex", gap: "0.875rem", alignItems: "center", flexWrap: "wrap" }}>
-          <motion.a
-            href="#cta"
-            whileHover={reduced ? {} : { y: HOVER_LIFT, boxShadow: "0 4px 14px rgba(59,130,246,0.22)" }}
-            whileTap={reduced ? {} : { y: 0, scale: 0.985 }}
-            transition={{ duration: DUR.fast, ease: "easeOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center",
-              padding: "0.6875rem 1.375rem",
-              background: "#3b82f6", color: "#fff",
-              borderRadius: 9, fontSize: "0.875rem", fontWeight: 600,
-              textDecoration: "none", letterSpacing: "-0.01em",
-            }}
-          >
-            Download Recall
-          </motion.a>
+          <DownloadButton size="md" />
 
           <motion.button
             onClick={onTrialClick}
@@ -526,22 +599,7 @@ function FinalCTA({ onTrialClick }: { onTrialClick: () => void }) {
 
         <Reveal delay={0.16}>
           <div style={{ display: "flex", gap: "1.25rem", alignItems: "center", flexWrap: "wrap" }}>
-            <motion.a
-              href="#"
-              whileHover={reduced ? {} : { y: HOVER_LIFT, boxShadow: "0 6px 24px rgba(59,130,246,0.28)" }}
-              whileTap={reduced ? {} : { y: 0, scale: 0.985 }}
-              transition={{ duration: DUR.fast, ease: "easeOut" }}
-              style={{
-                display: "inline-flex", alignItems: "center",
-                padding: "0.8125rem 1.75rem",
-                background: "#3b82f6", color: "#fff",
-                borderRadius: 10, fontSize: "0.9375rem", fontWeight: 700,
-                textDecoration: "none", letterSpacing: "-0.01em",
-                boxShadow: "0 2px 12px rgba(59,130,246,0.18)",
-              }}
-            >
-              Download Recall
-            </motion.a>
+            <DownloadButton size="lg" />
 
             <motion.button
               onClick={onTrialClick}
