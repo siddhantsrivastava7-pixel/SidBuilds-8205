@@ -80,19 +80,34 @@ function MiniNav() {
             <span style={{ color: "rgba(255,255,255,0.4)" }}>SidBuilds</span>
           </span>
         </a>
-        <a href="#cta" style={{
-          padding: "0.375rem 0.875rem",
-          background: "rgba(59,130,246,0.1)",
-          border: "1px solid rgba(59,130,246,0.18)",
-          borderRadius: 7, color: "#7baef8",
-          fontSize: "0.8125rem", fontWeight: 500,
-          textDecoration: "none", transition: "background 0.2s ease",
-        }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.18)")}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.1)")}
-        >
-          Download
-        </a>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <a href="#trial" style={{
+            padding: "0.375rem 0.875rem",
+            background: "transparent",
+            border: "1px solid rgba(59,130,246,0.18)",
+            borderRadius: 7, color: "#7baef8",
+            fontSize: "0.8125rem", fontWeight: 500,
+            textDecoration: "none", transition: "background 0.2s ease",
+          }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.1)")}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "transparent")}
+          >
+            Get Trial Key
+          </a>
+          <a href="#cta" style={{
+            padding: "0.375rem 0.875rem",
+            background: "rgba(59,130,246,0.1)",
+            border: "1px solid rgba(59,130,246,0.18)",
+            borderRadius: 7, color: "#7baef8",
+            fontSize: "0.8125rem", fontWeight: 500,
+            textDecoration: "none", transition: "background 0.2s ease",
+          }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.18)")}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "rgba(59,130,246,0.1)")}
+          >
+            Download
+          </a>
+        </div>
       </div>
     </nav>
   );
@@ -156,6 +171,23 @@ function Hero() {
             }}
           >
             Download Recall
+          </motion.a>
+
+          <motion.a
+            href="#trial"
+            whileHover={reduced ? {} : { y: HOVER_LIFT }}
+            whileTap={reduced ? {} : { y: 0, scale: 0.985 }}
+            transition={{ duration: DUR.fast, ease: "easeOut" }}
+            style={{
+              display: "inline-flex", alignItems: "center",
+              padding: "0.6875rem 1.375rem",
+              background: "transparent", color: "#7baef8",
+              border: "1px solid rgba(59,130,246,0.22)",
+              borderRadius: 9, fontSize: "0.875rem", fontWeight: 500,
+              textDecoration: "none", letterSpacing: "-0.01em",
+            }}
+          >
+            Get Trial Key
           </motion.a>
 
           <motion.a
@@ -379,6 +411,24 @@ function FinalCTA() {
               }}
             >
               Download Recall
+            </motion.a>
+
+            <motion.a
+              id="trial"
+              href="#trial"
+              whileHover={reduced ? {} : { y: HOVER_LIFT }}
+              whileTap={reduced ? {} : { y: 0, scale: 0.985 }}
+              transition={{ duration: DUR.fast, ease: "easeOut" }}
+              style={{
+                display: "inline-flex", alignItems: "center",
+                padding: "0.8125rem 1.75rem",
+                background: "transparent", color: "#7baef8",
+                border: "1px solid rgba(59,130,246,0.22)",
+                borderRadius: 10, fontSize: "0.9375rem", fontWeight: 600,
+                textDecoration: "none", letterSpacing: "-0.01em",
+              }}
+            >
+              Get Trial Key
             </motion.a>
 
             <a href="/" style={{
