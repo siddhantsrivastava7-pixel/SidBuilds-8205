@@ -5,6 +5,7 @@ import {
   DUR, EASE_OUT, HOVER_LIFT, Y_ENTER, Y_SMALL,
   prefersReducedMotion,
 } from "../components/motion";
+import { useSEO } from "../lib/useSEO";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -771,6 +772,33 @@ function FinalCTA({ onTrialClick, onMacClick }: { onTrialClick: () => void; onMa
 export default function Recall() {
   const [showTrial, setShowTrial] = useState(false);
   const [showMacSetup, setShowMacSetup] = useState(false);
+
+  useSEO({
+    title: "Recall — Searchable Memory for Your Bookmarks, Notes & Links",
+    description: "Recall turns your scattered bookmarks, notes, and links into a searchable memory layer. Stop losing things you've already saved.",
+    canonical: "https://sidbuilds.com/recall",
+    ogImage: "https://sidbuilds.com/og-image.png",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Recall",
+      "url": "https://sidbuilds.com/recall",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "macOS",
+      "description": "Recall turns your scattered bookmarks, notes, and links into a searchable memory layer. Search by what you remember, not where you saved it.",
+      "author": {
+        "@type": "Person",
+        "name": "Siddhanth Srivastava",
+        "url": "https://sidbuilds.com"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  });
+
   return (
     <div style={{ background: "#05070a", minHeight: "100vh", position: "relative" }}>
       <div style={{
