@@ -807,24 +807,39 @@ function SEOSections() {
       id: "find-bookmarks-faster",
       heading: "How to find bookmarks faster",
       body: [
-        "Most people save links the same way: click bookmark, forget it exists. The problem isn't saving — it's retrieval. Browser bookmarks have no real search. You can search by title, but if you don't remember the exact title, you're stuck scrolling.",
-        "Recall indexes the full context of what you save. Search by topic, by idea, by a fragment of what you remember — and it finds the right thing. It's the difference between a filing cabinet and a memory.",
+        "You don't actually forget things — you just can't find them when you need them.",
+        "Bookmarks break because they rely on memory. You're expected to remember where you saved something, not just what it was. Over time, folders pile up, titles get messy, and everything becomes harder to navigate.",
+        "A better approach is to search the way you think. Instead of digging through folders, you should be able to type a keyword, an idea, or even a vague memory — and instantly find what you saved.",
+        "That's what Recall does. It turns your bookmarks into something searchable, so you can find anything in seconds instead of scrolling endlessly.",
       ],
     },
     {
       id: "organize-saved-links",
       heading: "Best way to organize saved links",
       body: [
-        "Folders and tags sound good in theory. In practice, nobody maintains them. You create a folder called \"Useful Articles\", put three things in it, then never open it again.",
-        "The best system is one you don't have to think about. Recall doesn't ask you to categorize anything. Save the link, move on. When you need it, search for it. The organization happens automatically — behind the scenes, without your effort.",
+        "Most people try to organize saved links using folders, tags, or naming systems. It works at first — but it doesn't scale.",
+        "As you save more content, your system becomes harder to maintain. You forget where things belong, create duplicate categories, or stop organizing altogether. Eventually, everything becomes clutter.",
+        "The better way isn't more organization — it's less reliance on it.",
+        "Instead of forcing structure, let everything stay fluid and searchable. When you can instantly retrieve anything using simple search, you don't need to worry about perfect categorization. Recall is built around this idea. You save things normally, and when you need them, you just search — no folders, no mental overhead.",
       ],
     },
     {
       id: "why-cant-find-saved-things",
       heading: "Why you can't find things you saved",
       body: [
-        "It's not a memory problem — it's a tool problem. Browsers aren't built for retrieval. Notes apps spread things across notebooks. Tabs get closed. Read-later queues become read-never queues.",
-        "The real issue is that saving and finding are treated as the same step when they're completely different. Recall separates them: save with zero friction, find with a search bar that actually understands what you're looking for.",
+        "You saved it. You know you did. But now it's gone.",
+        "This happens because most tools are built for storage, not retrieval. They assume you'll remember exact titles, folders, or context — but that's not how memory works.",
+        "In reality, you remember fragments. A keyword. A topic. A vague idea. Traditional systems fail because they don't match how you think.",
+        "Recall fixes this by letting you search your saved content naturally. Instead of trying to remember where something is, you just describe it — and it shows up instantly. Because the problem was never saving. It was finding it again.",
+      ],
+    },
+    {
+      id: "saved-but-cant-find",
+      heading: "I saved it… but can't find it",
+      body: [
+        "You saved an article, tool, or idea. You know you did.",
+        "But now it's gone — buried in bookmarks, tabs, or notes.",
+        "Recall fixes this by making everything searchable, so you can find what you saved in seconds.",
       ],
     },
   ];
