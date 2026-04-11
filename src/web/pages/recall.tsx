@@ -492,19 +492,19 @@ function Hero({ onTrialClick, onMacClick }: { onTrialClick: () => void; onMacCli
           margin: 0, marginBottom: "2rem", maxWidth: 780,
         }}>
           <motion.span {...r(0.1)} style={{ display: "block", color: "#e6eaf0" }}>
-            You save things.
+            Find anything you've saved.
           </motion.span>
-          <motion.span {...r(0.2)} style={{ display: "block", color: "#2e3640" }}>
-            You never find them again.
+          <motion.span {...r(0.2)} style={{ display: "block", color: "#3b82f6" }}>
+            Instantly.
           </motion.span>
         </h1>
 
         <motion.p {...r(0.32)} style={{
           fontSize: "1.0625rem", color: "#4a5562",
-          lineHeight: 1.75, maxWidth: 440,
+          lineHeight: 1.75, maxWidth: 480,
           margin: 0, marginBottom: "3rem", fontWeight: 400,
         }}>
-          Recall turns your scattered bookmarks, notes, and links into a searchable memory layer.
+          Recall turns bookmarks, notes, and links into something you can actually search.
         </motion.p>
 
         <motion.div {...r(0.42)} style={{ display: "flex", gap: "0.875rem", alignItems: "center", flexWrap: "wrap" }}>
@@ -704,6 +704,163 @@ function Features() {
   );
 }
 
+// ─── KEYWORD INTRO ────────────────────────────────────────────────────────────
+function KeywordIntro() {
+  return (
+    <Section style={{ paddingBottom: "10rem" }}>
+      <Divider />
+      <div style={{ paddingTop: "10rem", maxWidth: 640 }}>
+        <Reveal>
+          <p style={{
+            fontSize: "1.0625rem", color: "#4a5562", lineHeight: 1.85,
+            margin: 0, marginBottom: "1.25rem",
+          }}>
+            If you've ever saved something and couldn't find it later, you're not alone.
+          </p>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <p style={{
+            fontSize: "1.0625rem", color: "#3d4d5c", lineHeight: 1.85,
+            margin: 0, marginBottom: "1.25rem",
+          }}>
+            Bookmarks don't help you organize saved links or search them properly. They just pile up — a graveyard of things you once thought were useful.
+          </p>
+        </Reveal>
+        <Reveal delay={0.14}>
+          <p style={{
+            fontSize: "1.0625rem", color: "#4a5562", lineHeight: 1.85,
+            margin: 0,
+          }}>
+            Recall fixes that by making everything searchable — so you can find any link, idea, or tool instantly, no matter when you saved it.
+          </p>
+        </Reveal>
+      </div>
+    </Section>
+  );
+}
+
+// ─── HOW IT WORKS ─────────────────────────────────────────────────────────────
+function HowItWorks() {
+  const steps = [
+    {
+      title: "Save anything",
+      body: "One shortcut captures any link, note, or page — from your browser, your phone, or wherever you find something worth keeping.",
+    },
+    {
+      title: "Search instantly",
+      body: "Type what you remember — a topic, a phrase, a vague idea — and Recall finds it. No folders. No tags. No system to maintain.",
+    },
+    {
+      title: "Find it later",
+      body: "Everything you've ever saved is searchable, forever. Come back in a day or a year — it's still there, still findable.",
+    },
+  ];
+
+  return (
+    <Section id="how-recall-works" style={{ paddingBottom: "10rem" }}>
+      <Divider />
+      <div style={{ paddingTop: "10rem" }}>
+        <Reveal>
+          <h2 style={{
+            fontSize: "clamp(1.875rem, 3.5vw, 2.75rem)", fontWeight: 700,
+            color: "#e6eaf0", letterSpacing: "-0.04em",
+            margin: 0, lineHeight: 1.12, maxWidth: 520, marginBottom: "4rem",
+          }}>
+            How Recall Works
+          </h2>
+        </Reveal>
+
+        {steps.map((step, i) => (
+          <Reveal key={step.title} delay={i * 0.07}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "240px 1fr",
+              gap: "3rem",
+              padding: "2.25rem 0",
+              borderBottom: "1px solid rgba(255,255,255,0.04)",
+              alignItems: "start",
+            }} className="sb-principle-row">
+              <div style={{
+                fontSize: "0.9375rem", fontWeight: 600,
+                color: "#4a5a68", letterSpacing: "-0.02em", paddingTop: 2,
+              }}>
+                {step.title}
+              </div>
+              <p style={{
+                fontSize: "0.9375rem", color: "#2e3c48",
+                lineHeight: 1.65, margin: 0,
+              }}>
+                {step.body}
+              </p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+// ─── SEO SECTIONS ─────────────────────────────────────────────────────────────
+function SEOSections() {
+  const sections = [
+    {
+      id: "find-bookmarks-faster",
+      heading: "How to find bookmarks faster",
+      body: [
+        "Most people save links the same way: click bookmark, forget it exists. The problem isn't saving — it's retrieval. Browser bookmarks have no real search. You can search by title, but if you don't remember the exact title, you're stuck scrolling.",
+        "Recall indexes the full context of what you save. Search by topic, by idea, by a fragment of what you remember — and it finds the right thing. It's the difference between a filing cabinet and a memory.",
+      ],
+    },
+    {
+      id: "organize-saved-links",
+      heading: "Best way to organize saved links",
+      body: [
+        "Folders and tags sound good in theory. In practice, nobody maintains them. You create a folder called \"Useful Articles\", put three things in it, then never open it again.",
+        "The best system is one you don't have to think about. Recall doesn't ask you to categorize anything. Save the link, move on. When you need it, search for it. The organization happens automatically — behind the scenes, without your effort.",
+      ],
+    },
+    {
+      id: "why-cant-find-saved-things",
+      heading: "Why you can't find things you saved",
+      body: [
+        "It's not a memory problem — it's a tool problem. Browsers aren't built for retrieval. Notes apps spread things across notebooks. Tabs get closed. Read-later queues become read-never queues.",
+        "The real issue is that saving and finding are treated as the same step when they're completely different. Recall separates them: save with zero friction, find with a search bar that actually understands what you're looking for.",
+      ],
+    },
+  ];
+
+  return (
+    <>
+      {sections.map((s) => (
+        <Section key={s.id} id={s.id} style={{ paddingBottom: "10rem" }}>
+          <Divider />
+          <div style={{ paddingTop: "10rem", maxWidth: 640 }}>
+            <Reveal>
+              <h2 style={{
+                fontSize: "clamp(1.375rem, 2.5vw, 1.875rem)", fontWeight: 700,
+                color: "#c4ccd4", letterSpacing: "-0.035em",
+                margin: 0, lineHeight: 1.2, marginBottom: "2rem",
+              }}>
+                {s.heading}
+              </h2>
+            </Reveal>
+            {s.body.map((para, i) => (
+              <Reveal key={i} delay={i * 0.07}>
+                <p style={{
+                  fontSize: "1rem", color: i === 0 ? "#4a5562" : "#3d4d5c",
+                  lineHeight: 1.85, margin: 0, marginBottom: "1.25rem",
+                }}>
+                  {para}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+        </Section>
+      ))}
+    </>
+  );
+}
+
 // ─── FINAL CTA ────────────────────────────────────────────────────────────────
 function FinalCTA({ onTrialClick, onMacClick }: { onTrialClick: () => void; onMacClick: () => void }) {
   const reduced = prefersReducedMotion();
@@ -774,8 +931,8 @@ export default function Recall() {
   const [showMacSetup, setShowMacSetup] = useState(false);
 
   useSEO({
-    title: "Recall — Searchable Memory for Your Bookmarks, Notes & Links",
-    description: "Recall turns your scattered bookmarks, notes, and links into a searchable memory layer. Stop losing things you've already saved.",
+    title: "Recall — Find Anything You've Saved Instantly",
+    description: "Recall helps you search bookmarks, links, and notes instantly. Stop losing things you saved. Find anything in seconds.",
     canonical: "https://sidbuilds.com/recall",
     ogImage: "https://sidbuilds.com/og-image.png",
     jsonLd: {
@@ -810,8 +967,11 @@ export default function Recall() {
         <MiniNav onTrialClick={() => setShowTrial(true)} />
         <Hero onTrialClick={() => setShowTrial(true)} onMacClick={() => setShowMacSetup(true)} />
         <Pain />
+        <KeywordIntro />
         <Shift />
+        <HowItWorks />
         <Features />
+        <SEOSections />
         <FinalCTA onTrialClick={() => setShowTrial(true)} onMacClick={() => setShowMacSetup(true)} />
       </div>
       {showTrial && <TrialKeyModal onClose={() => setShowTrial(false)} />}
