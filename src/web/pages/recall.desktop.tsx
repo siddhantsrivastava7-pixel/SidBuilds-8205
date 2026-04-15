@@ -574,6 +574,21 @@ function PlatformCard({ id, label, sub, icon, accentColor, glowColor, bindPhase,
   );
 }
 
+/* ─── Download URLs ──────────────────────────────────────────────────── */
+const DOWNLOAD_URLS = {
+  mac: 'https://github.com/siddhantsrivastava7-pixel/recall/releases/download/v0.1.3/Recall.app.tar.gz',
+  win: 'https://github.com/siddhantsrivastava7-pixel/recall/releases/download/v0.1.3/Recall_0.1.3_x64_en-US.msi',
+};
+
+function triggerDownload(url: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 /* ─── Download Flow ──────────────────────────────────────────────────── */
 type DLPhase = 'realization' | 'convergence' | 'orb' | 'panel';
 
@@ -591,10 +606,11 @@ function DownloadFlow({ active }: { active: boolean }) {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [active]);
 
-  // selection → 6-phase binding sequence
+  // selection → trigger download + 6-phase binding sequence
   const handleSelect = (id: 'mac' | 'win') => {
     if (selected) return;
     setSelected(id);
+    triggerDownload(DOWNLOAD_URLS[id]);
     setBindPhase('isolate');
     setTimeout(() => setBindPhase('bind'),      420);
     setTimeout(() => setBindPhase('transform'), 2000);
@@ -1044,8 +1060,7 @@ function InitExperience({ active, accentColor }: { active: boolean; accentColor:
               </span>
               <span style={{ fontFamily:"'Space Mono',monospace", fontSize:8, letterSpacing:'.1em', color:'rgba(160,150,210,0.22)', margin:'0 8px' }}>·</span>
               <motion.a
-                href="#"
-                onClick={e => e.preventDefault()}
+                href={selected ? DOWNLOAD_URLS[selected] : '#'}
                 whileHover={{ color:'rgba(180,165,255,0.7)' }}
                 style={{ fontFamily:"'Space Mono',monospace", fontSize:8, letterSpacing:'.1em', color:'rgba(155,145,210,0.28)', textTransform:'uppercase', textDecoration:'none', cursor:'pointer' }}
               >
@@ -1213,27 +1228,30 @@ function InitExperience({ active, accentColor }: { active: boolean; accentColor:
 }
 
 /* ─── License Grant ──────────────────────────────────────────────────── */
-// Generates a deterministic-looking trial key, assembles from fragments,
-// no typing feel — characters arrive as if crystallising out of the field.
-function generateKey(): string {
-  const seg = () => Math.random().toString(36).slice(2,6).toUpperCase();
-  return `RC-TRIAL-${seg()}-${seg()}`;
-}
-
 function LicenseGrant({ accentColor }: { accentColor: string }) {
   const ac  = accentColor;
   const ac2 = ac.replace('1)', '0.55)');
   const ac3 = ac.replace('1)', '0.22)');
 
-  const [licenseKey]    = useState(() => generateKey());
+  const [licenseKey,  setLicenseKey] = useState<string>('');
   const [assembled, setAssembled]   = useState(false);
   const [copied,    setCopied]      = useState(false);
   const [dissolved, setDissolved]   = useState(false);
+  const [error,     setError]       = useState(false);
 
-  // fragments assemble ~800ms after mount
+  // fetch real trial key from API, then assemble
   useEffect(() => {
-    const t = setTimeout(() => setAssembled(true), 820);
-    return () => clearTimeout(t);
+    fetch('/api/generate-trial', { method: 'POST' })
+      .then(r => r.json<{ key?: string }>())
+      .then(data => {
+        if (data.key) {
+          setLicenseKey(data.key);
+          setTimeout(() => setAssembled(true), 820);
+        } else {
+          setError(true);
+        }
+      })
+      .catch(() => setError(true));
   }, []);
 
   const handleCopy = () => {
@@ -1244,7 +1262,15 @@ function LicenseGrant({ accentColor }: { accentColor: string }) {
   };
 
   // key characters split into segments for stagger
-  const segments = licenseKey.split('-'); // ['RC','TRIAL','XXXX','XXXX']
+  const segments = licenseKey ? licenseKey.split('-') : ['RC','TRIAL','····','····'];
+
+  if (error) return (
+    <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} style={{ position:'fixed', inset:0, zIndex:70, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <span style={{ fontFamily:"'Space Mono',monospace", fontSize:10, letterSpacing:'.14em', color:'rgba(255,120,120,0.5)', textTransform:'uppercase' }}>
+        Key generation failed — try again later.
+      </span>
+    </motion.div>
+  );
 
   return (
     <motion.div
